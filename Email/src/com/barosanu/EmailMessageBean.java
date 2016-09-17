@@ -12,11 +12,13 @@ public class EmailMessageBean {
 	private SimpleStringProperty sender;
 	private SimpleStringProperty subject;
 	private SimpleStringProperty size;
+	private String content;
 	
-	public EmailMessageBean(String Subject, String Sender, int size){
+	public EmailMessageBean(String Subject, String Sender, int size, String Content){
 		this.subject = new SimpleStringProperty(Subject);
 		this.sender = new SimpleStringProperty(Sender);
 		this.size = new SimpleStringProperty(formatSize(size));
+		this.content = Content;
 	}
 	
 	public String getSender(){
@@ -27,6 +29,9 @@ public class EmailMessageBean {
 	}
 	public String getSize(){
 		return size.get();
+	}
+	public String getContent(){
+		return content;
 	}
 	
 	private String formatSize(int size){

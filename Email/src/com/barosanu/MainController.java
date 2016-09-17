@@ -4,13 +4,13 @@ import java.net.URL;
 import java.util.Comparator;
 import java.util.ResourceBundle;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TreeItem;
@@ -19,12 +19,15 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.web.WebView;
+import javafx.stage.Stage;
 
 public class MainController implements Initializable{
 	
     @FXML
     private TreeView<String> emailFoldersTreeView;
     private TreeItem<String> root  = new TreeItem<String>();
+    private SampleData sampleData = new SampleData();
+    private MenuItem showDetails = new MenuItem("show details");
 	
     @FXML
     private TableView<EmailMessageBean> emailTableView;
@@ -47,33 +50,16 @@ public class MainController implements Initializable{
     @FXML
     void Button1Action(ActionEvent event) {
     	System.out.println("button1 clicked!!");
-
     }
-    
-    
-    final ObservableList<EmailMessageBean> data = FXCollections.observableArrayList(
-    		new EmailMessageBean("Hello from Sefu!!!","aaa@yahoo.com", 5500000),
-    		new EmailMessageBean("Hello from Barosanu","bbb@yahoo.com", 200),
-    		new EmailMessageBean("Hello from Sefu!!!asdas","ccc@yahoo.com", 10),
-    		new EmailMessageBean("Hello from Barosanuasdasas","ddd@yahoo.com", 6300)
-    		
-    		);
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		messageRenderer.getEngine().loadContent("<html>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsucomes from a line in section 1.10.32.</html>");
-		
 		subjectCol.setCellValueFactory(new PropertyValueFactory<EmailMessageBean, String>("subject"));
 		senderCol.setCellValueFactory(new PropertyValueFactory<EmailMessageBean, String>("sender"));
-		sizeCol.setCellValueFactory(new PropertyValueFactory<EmailMessageBean, String>("size"));
-		
-		emailTableView.setItems(data);
-		
-		sizeCol.setComparator(new Comparator<String>() {
-			
-			Integer int1, int2;
-			
+		sizeCol.setCellValueFactory(new PropertyValueFactory<EmailMessageBean, String>("size"));		
+		sizeCol.setComparator(new Comparator<String>() {			
+			Integer int1, int2;			
 			@Override
 			public int compare(String o1, String o2) {
 					int1 = EmailMessageBean.formattedValues.get(o1);
@@ -100,6 +86,24 @@ public class MainController implements Initializable{
 		root.getChildren().addAll(Inbox, Sent, Spam, Trash);
 		root.setExpanded(true);
 		
+		emailTableView.setContextMenu(new ContextMenu(showDetails));
+		
+		emailFoldersTreeView.setOnMouseClicked(e ->{
+			TreeItem<String> item = emailFoldersTreeView.getSelectionModel().getSelectedItem();
+			if(item != null){
+				emailTableView.setItems(sampleData.emailFolders.get(item.getValue()));
+			}
+		});
+		emailTableView.setOnMouseClicked(e->{
+			EmailMessageBean message = emailTableView.getSelectionModel().getSelectedItem();
+			if(message != null){
+				messageRenderer.getEngine().loadContent(message.getContent());
+			}
+		});
+		showDetails.setOnAction(e->{
+			Stage stage = new Stage();
+			stage.show();
+		});
 		
 		
 		
