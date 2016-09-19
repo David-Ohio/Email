@@ -9,7 +9,7 @@ import javafx.collections.ObservableList;
 public class SampleData {
 	
     private final ObservableList<EmailMessageBean> Inbox = FXCollections.observableArrayList(
-    		new EmailMessageBean("Hello from Sefu!!!","aaa@yahoo.com", 5500000, "<html>Hello from Sefu!!!<h3>lorem ipsum + <br> </h3></html>"),
+    		new EmailMessageBean("Hello from Sefu!!!","aaa@yahoo.com", 5500000, "<html>What is Lorem Ipsum?Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</html>"),
     		new EmailMessageBean("Hello from Barosanu","bbb@yahoo.com", 200, "<html>Hello from Barosanu<h3>lorem ipsum + <br> </h3></html>"),
     		new EmailMessageBean("Hello from Sefu!!!asdas","ccc@yahoo.com", 10, "<html>Hello from Sefu!!!asdas<h3>lorem ipsum + <br> </h3></html>"),
     		new EmailMessageBean("Hello from Barosanuasdasas","ddd@yahoo.com", 6300, "<html>Hello from Barosanuasdasas<h3>lorem ipsum + <br> </h3></html>")    		
