@@ -5,7 +5,7 @@
 <?import javafx.scene.web.WebView?>
 
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="562.0" prefWidth="664.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.barosanu.EmailDetailsController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="562.0" prefWidth="664.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.barosanu.controller.EmailDetailsController">
    <children>
       <WebView fx:id="webView" layoutX="14.0" layoutY="81.0" prefHeight="477.0" prefWidth="638.0" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="81.0" />
       <Label fx:id="subjectLabel" layoutX="24.0" layoutY="21.0" text="Subject" />

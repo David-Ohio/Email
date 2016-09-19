@@ -1,4 +1,4 @@
-package com.barosanu;
+package com.barosanu.model;
 
 public class Singleton {
 	

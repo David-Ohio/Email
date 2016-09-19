@@ -1,7 +1,9 @@
-package com.barosanu;
+package com.barosanu.controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import com.barosanu.model.Singleton;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

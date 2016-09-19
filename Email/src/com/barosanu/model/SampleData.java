@@ -1,4 +1,4 @@
-package com.barosanu;
+package com.barosanu.model;
 
 import java.util.HashMap;
 import java.util.Map;

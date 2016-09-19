@@ -1,15 +1,17 @@
-package com.barosanu;
+package com.barosanu.controller;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.Comparator;
 import java.util.ResourceBundle;
 
+import com.barosanu.model.EmailMessageBean;
+import com.barosanu.model.SampleData;
+import com.barosanu.model.Singleton;
+import com.barosanu.view.ViewFactory;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
@@ -19,9 +21,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.Pane;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
@@ -60,6 +59,7 @@ public class MainController implements Initializable{
 	@SuppressWarnings("unchecked")
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		ViewFactory viewfactory = new ViewFactory();
 		singleton = Singleton.getIntance();
 		subjectCol.setCellValueFactory(new PropertyValueFactory<EmailMessageBean, String>("subject"));
 		senderCol.setCellValueFactory(new PropertyValueFactory<EmailMessageBean, String>("sender"));
@@ -79,15 +79,15 @@ public class MainController implements Initializable{
 		emailFoldersTreeView.setRoot(root);
 		
 		root.setValue("example@yahoo.com");
-		root.setGraphic(resolveIcon(root.getValue()));
+		root.setGraphic(viewfactory.resolveIcon(root.getValue()));
 		
-		TreeItem<String> Inbox = new TreeItem<String>("Inbox", resolveIcon("Inbox"));
-		TreeItem<String> Sent = new TreeItem<String>("Sent", resolveIcon("Sent"));
-			TreeItem<String> Subitem1 = new TreeItem<String>("Subitem1", resolveIcon("Subitem1"));
-			TreeItem<String> Subitem2 = new TreeItem<String>("Subitem2",resolveIcon("Subitem2"));
+		TreeItem<String> Inbox = new TreeItem<String>("Inbox", viewfactory.resolveIcon("Inbox"));
+		TreeItem<String> Sent = new TreeItem<String>("Sent", viewfactory.resolveIcon("Sent"));
+			TreeItem<String> Subitem1 = new TreeItem<String>("Subitem1", viewfactory.resolveIcon("Subitem1"));
+			TreeItem<String> Subitem2 = new TreeItem<String>("Subitem2",viewfactory.resolveIcon("Subitem2"));
 			Sent.getChildren().addAll(Subitem1, Subitem2);
-		TreeItem<String> Spam = new TreeItem<String>("Spam", resolveIcon("Spam"));
-		TreeItem<String> Trash = new TreeItem<String>("Trash", resolveIcon("Trash"));
+		TreeItem<String> Spam = new TreeItem<String>("Spam", viewfactory.resolveIcon("Spam"));
+		TreeItem<String> Trash = new TreeItem<String>("Trash", viewfactory.resolveIcon("Trash"));
 		
 		root.getChildren().addAll(Inbox, Sent, Spam, Trash);
 		root.setExpanded(true);
@@ -109,51 +109,14 @@ public class MainController implements Initializable{
 		});
 		showDetails.setOnAction(e->{
 			
-			Pane pane = new Pane();
-			try {
-				pane = FXMLLoader.load(getClass().getResource("EmailDetailsLayout.fxml"));
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}	
-			
-			Scene scene = new Scene(pane);
-			scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+			Scene scene = viewfactory.getEmailDetailsScene();
 			Stage stage = new Stage();
 			stage.setScene(scene);
 			stage.show();
-		});
-		
-		
-		
+		});		
 		
 		
 	}
 	
-	private Node resolveIcon(String treeItemValue){
-		String lowerCaseTreeItemValue = treeItemValue.toLowerCase();
-		ImageView returnIcon;
-			try {
-				if(lowerCaseTreeItemValue.contains("inbox")){
-					returnIcon= new ImageView(new Image(getClass().getResourceAsStream("images/inbox.png")));
-				} else if(lowerCaseTreeItemValue.contains("sent")){
-					returnIcon= new ImageView(new Image(getClass().getResourceAsStream("images/sent2.png")));
-				} else if(lowerCaseTreeItemValue.contains("spam")){
-					returnIcon= new ImageView(new Image(getClass().getResourceAsStream("images/spam.png")));
-				} else if(lowerCaseTreeItemValue.contains("@")){
-					returnIcon= new ImageView(new Image(getClass().getResourceAsStream("images/email.png")));
-				} else{
-					returnIcon= new ImageView(new Image(getClass().getResourceAsStream("images/folder.png")));
-				}
-			} catch (NullPointerException e) {
-				System.out.println("Invalid image location!!!");
-				e.printStackTrace();
-				returnIcon = new ImageView();
-			}
-			
-			returnIcon.setFitHeight(16);
-			returnIcon.setFitWidth(16);
-
-		return returnIcon;
-	}
 
 }
