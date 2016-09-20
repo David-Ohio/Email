@@ -6,7 +6,6 @@ import java.util.ResourceBundle;
 
 import com.barosanu.model.EmailMessageBean;
 import com.barosanu.model.SampleData;
-import com.barosanu.model.Singleton;
 import com.barosanu.view.ViewFactory;
 
 import javafx.event.ActionEvent;
@@ -24,14 +23,18 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
-public class MainController implements Initializable{
+public class MainController extends AbstractController implements Initializable{
 	
-    @FXML
+    public MainController(ModelAccess modelAccess) {
+		super(modelAccess);
+	}
+
+	@FXML
     private TreeView<String> emailFoldersTreeView;
     private TreeItem<String> root  = new TreeItem<String>();
     private SampleData sampleData = new SampleData();
     private MenuItem showDetails = new MenuItem("show details");
-    private Singleton singleton;
+
 	
     @FXML
     private TableView<EmailMessageBean> emailTableView;
@@ -59,8 +62,7 @@ public class MainController implements Initializable{
 	@SuppressWarnings("unchecked")
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		ViewFactory viewfactory = new ViewFactory();
-		singleton = Singleton.getIntance();
+		ViewFactory viewfactory = ViewFactory.defaultFactory;
 		subjectCol.setCellValueFactory(new PropertyValueFactory<EmailMessageBean, String>("subject"));
 		senderCol.setCellValueFactory(new PropertyValueFactory<EmailMessageBean, String>("sender"));
 		sizeCol.setCellValueFactory(new PropertyValueFactory<EmailMessageBean, String>("size"));		
@@ -103,8 +105,9 @@ public class MainController implements Initializable{
 		emailTableView.setOnMouseClicked(e->{
 			EmailMessageBean message = emailTableView.getSelectionModel().getSelectedItem();
 			if(message != null){
+				getModelAccess().setSelectedMessage(message);
 				messageRenderer.getEngine().loadContent(message.getContent());
-				singleton.setMessage(message);
+
 			}
 		});
 		showDetails.setOnAction(e->{

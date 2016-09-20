@@ -1,40 +1,48 @@
 package com.barosanu.view;
 
-import java.io.IOException;
+import javax.naming.OperationNotSupportedException;
+
+import com.barosanu.controller.AbstractController;
+import com.barosanu.controller.EmailDetailsController;
+import com.barosanu.controller.MainController;
+import com.barosanu.controller.ModelAccess;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Pane;
 
 public class ViewFactory {
 	
-	public Scene getMainScene(){
-		Pane pane;		
-		try {
-			pane = FXMLLoader.load(getClass().getResource("MainLayout.fxml"));
-		} catch (IOException e) {
-			pane = null;
+	public static ViewFactory defaultFactory = new ViewFactory();
+	private static boolean mainViewInitialized = false;
+	
+	private final String DEFAULT_CSS = "style.css";
+	private final String EMAIL_DETAILS_FXML = "EmailDetailsLayout.fxml";
+	private final String MAIN_SCREEN_FXML = "MainLayout.fxml";
+	
+	private ModelAccess modelAccess = new ModelAccess();
+	
+	private MainController mainController;
+	private EmailDetailsController emailDetailsController;
+	
+
+	public Scene getMainScene() throws OperationNotSupportedException{
+		if (!mainViewInitialized) {
+			mainController = new MainController(modelAccess);
+			mainViewInitialized = true;
+			return initializeScene(MAIN_SCREEN_FXML, mainController);
+		} else{
+			throw new OperationNotSupportedException("Main Scene allready initialized!!!!");
 		}
-		Scene scene = new Scene(pane);
-		scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
-		return scene;
 		
 	}
 	
 	public Scene getEmailDetailsScene(){
-		Pane pane;		
-		try {
-			pane = FXMLLoader.load(getClass().getResource("EmailDetailsLayout.fxml"));
-		} catch (IOException e) {
-			pane = null;
-		}
-		Scene scene = new Scene(pane);
-		scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
-		return scene;
-		
+		emailDetailsController = new EmailDetailsController(modelAccess);
+		return initializeScene(EMAIL_DETAILS_FXML, emailDetailsController);		
 	}
 	
 	
@@ -66,5 +74,31 @@ public class ViewFactory {
 
 		return returnIcon;
 	}
+	
+	private Scene initializeScene(String fxmlPath, AbstractController controller){
+		FXMLLoader loader;
+		Parent parent;
+		Scene scene;
+		try {
+			loader = new FXMLLoader(getClass().getResource(fxmlPath));
+			loader.setController(controller);
+			parent = loader.load();
+		} catch (Exception e) {
+			return null;
+		}
+		
+		scene = new Scene(parent);
+		scene.getStylesheets().add(getClass().getResource(DEFAULT_CSS).toExternalForm());
+		return scene;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 }
