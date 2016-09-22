@@ -3,9 +3,11 @@ package com.barosanu.model;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.barosanu.model.table.AbstractTableItem;
+
 import javafx.beans.property.SimpleStringProperty;
 
-public class EmailMessageBean {
+public class EmailMessageBean extends AbstractTableItem{
 	
 	public static Map<String, Integer> formattedValues = new HashMap<String, Integer>();
 	
@@ -14,7 +16,8 @@ public class EmailMessageBean {
 	private SimpleStringProperty size;
 	private String content;
 	
-	public EmailMessageBean(String Subject, String Sender, int size, String Content){
+	public EmailMessageBean(String Subject, String Sender, int size, String Content, boolean isRead){
+		super(isRead);
 		this.subject = new SimpleStringProperty(Subject);
 		this.sender = new SimpleStringProperty(Sender);
 		this.size = new SimpleStringProperty(formatSize(size));

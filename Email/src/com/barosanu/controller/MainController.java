@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 
 import com.barosanu.model.EmailMessageBean;
 import com.barosanu.model.SampleData;
+import com.barosanu.model.table.BoldableRowFactory;
 import com.barosanu.view.ViewFactory;
 
 import javafx.event.ActionEvent;
@@ -58,10 +59,21 @@ public class MainController extends AbstractController implements Initializable{
     void Button1Action(ActionEvent event) {
     	System.out.println("button1 clicked!!");
     }
+    
+    @FXML
+    void changeReadAction() {
+    	EmailMessageBean message = getModelAccess().getSelectedMessage();
+    	if(message != null){
+    		boolean value = message.isRead();
+    		message.setRead(!value);
+    	}
+    }
+    
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		emailTableView.setRowFactory(e-> new BoldableRowFactory<>());
 		ViewFactory viewfactory = ViewFactory.defaultFactory;
 		subjectCol.setCellValueFactory(new PropertyValueFactory<EmailMessageBean, String>("subject"));
 		senderCol.setCellValueFactory(new PropertyValueFactory<EmailMessageBean, String>("sender"));
