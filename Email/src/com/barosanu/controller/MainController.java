@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 
 import com.barosanu.model.EmailMessageBean;
 import com.barosanu.model.SampleData;
+import com.barosanu.model.folder.EmailFolderBean;
 import com.barosanu.model.table.BoldableRowFactory;
 import com.barosanu.view.ViewFactory;
 
@@ -18,7 +19,6 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.web.WebView;
@@ -32,8 +32,6 @@ public class MainController extends AbstractController implements Initializable{
 
 	@FXML
     private TreeView<String> emailFoldersTreeView;
-    private TreeItem<String> root  = new TreeItem<String>();
-    private SampleData sampleData = new SampleData();
     private MenuItem showDetails = new MenuItem("show details");
 
 	
@@ -66,6 +64,14 @@ public class MainController extends AbstractController implements Initializable{
     	if(message != null){
     		boolean value = message.isRead();
     		message.setRead(!value);
+    		EmailFolderBean<String>  selectedFolder = getModelAccess().getSelectedFolder();
+    		if(selectedFolder != null){
+    			if(value){
+    				selectedFolder.incrementUnreadMessageCount(1);
+    			}else{
+    				selectedFolder.decrementUreadMessagesCount();
+    			}
+    		}
     	}
     }
     
@@ -89,29 +95,41 @@ public class MainController extends AbstractController implements Initializable{
 		});
 		
 		
+		EmailFolderBean<String> root = new EmailFolderBean<String>("");
+		emailFoldersTreeView.setRoot(root);		
+		emailFoldersTreeView.setShowRoot(false);
+//		root.setGraphic(viewfactory.resolveIcon(root.getValue()));		
+//		TreeItem<String> Inbox = new TreeItem<String>("Inbox", viewfactory.resolveIcon("Inbox"));
+//		TreeItem<String> Sent = new TreeItem<String>("Sent", viewfactory.resolveIcon("Sent"));
+//			TreeItem<String> Subitem1 = new TreeItem<String>("Subitem1", viewfactory.resolveIcon("Subitem1"));
+//			TreeItem<String> Subitem2 = new TreeItem<String>("Subitem2",viewfactory.resolveIcon("Subitem2"));
+//			Sent.getChildren().addAll(Subitem1, Subitem2);
+//		TreeItem<String> Spam = new TreeItem<String>("Spam", viewfactory.resolveIcon("Spam"));
+//		TreeItem<String> Trash = new TreeItem<String>("Trash", viewfactory.resolveIcon("Trash"));		
+//		root.getChildren().addAll(Inbox, Sent, Spam, Trash);
+		EmailFolderBean<String> barosanu = new EmailFolderBean<String>("example@yahoo.com");
+		root.getChildren().add(barosanu);
+		EmailFolderBean<String> Inbox = new EmailFolderBean<String>("Inbox", "CompleteInbox");
+		EmailFolderBean<String> Sent = new EmailFolderBean<String>("Sent", "CompleteSent");
+			Sent.getChildren().add(new EmailFolderBean<String>("Subfoler1", "Subfoler1"));
+			Sent.getChildren().add(new EmailFolderBean<String>("Subfoler2", "Subfoler2"));
+		EmailFolderBean<String> Spam = new EmailFolderBean<String>("Spam", "CompleteSpam");
+		barosanu.getChildren().addAll(Inbox, Sent, Spam);
 		
-		emailFoldersTreeView.setRoot(root);
-		
-		root.setValue("example@yahoo.com");
-		root.setGraphic(viewfactory.resolveIcon(root.getValue()));
-		
-		TreeItem<String> Inbox = new TreeItem<String>("Inbox", viewfactory.resolveIcon("Inbox"));
-		TreeItem<String> Sent = new TreeItem<String>("Sent", viewfactory.resolveIcon("Sent"));
-			TreeItem<String> Subitem1 = new TreeItem<String>("Subitem1", viewfactory.resolveIcon("Subitem1"));
-			TreeItem<String> Subitem2 = new TreeItem<String>("Subitem2",viewfactory.resolveIcon("Subitem2"));
-			Sent.getChildren().addAll(Subitem1, Subitem2);
-		TreeItem<String> Spam = new TreeItem<String>("Spam", viewfactory.resolveIcon("Spam"));
-		TreeItem<String> Trash = new TreeItem<String>("Trash", viewfactory.resolveIcon("Trash"));
-		
-		root.getChildren().addAll(Inbox, Sent, Spam, Trash);
-		root.setExpanded(true);
+		Inbox.getData().addAll(SampleData.Inbox);
+		Sent.getData().addAll(SampleData.Sent);
+		Spam.getData().addAll(SampleData.Spam);
+
 		
 		emailTableView.setContextMenu(new ContextMenu(showDetails));
 		
 		emailFoldersTreeView.setOnMouseClicked(e ->{
-			TreeItem<String> item = emailFoldersTreeView.getSelectionModel().getSelectedItem();
-			if(item != null){
-				emailTableView.setItems(sampleData.emailFolders.get(item.getValue()));
+			EmailFolderBean<String> item = (EmailFolderBean<String>)emailFoldersTreeView.getSelectionModel().getSelectedItem();
+			if(item != null && !item.isTopElement()){
+				emailTableView.setItems(item.getData());
+				getModelAccess().setSelectedFolder(item);
+				//clear selected message:
+				getModelAccess().setSelectedMessage(null);
 			}
 		});
 		emailTableView.setOnMouseClicked(e->{
@@ -119,7 +137,6 @@ public class MainController extends AbstractController implements Initializable{
 			if(message != null){
 				getModelAccess().setSelectedMessage(message);
 				messageRenderer.getEngine().loadContent(message.getContent());
-
 			}
 		});
 		showDetails.setOnAction(e->{

@@ -60,6 +60,8 @@ public class ViewFactory {
 					returnIcon= new ImageView(new Image(getClass().getResourceAsStream("images/spam.png")));
 				} else if(lowerCaseTreeItemValue.contains("@")){
 					returnIcon= new ImageView(new Image(getClass().getResourceAsStream("images/email.png")));
+				} else if(lowerCaseTreeItemValue.isEmpty()){
+					return null;
 				} else{
 					returnIcon= new ImageView(new Image(getClass().getResourceAsStream("images/folder.png")));
 				}
