@@ -4,14 +4,13 @@ import java.net.URL;
 import java.util.Comparator;
 import java.util.ResourceBundle;
 
-import com.barosanu.controller.services.FetchFoldersService;
-import com.barosanu.model.EmailAccountBean;
+import com.barosanu.controller.services.CreateAndRegisterEmailAccountService;
 import com.barosanu.model.EmailMessageBean;
-import com.barosanu.model.SampleData;
 import com.barosanu.model.folder.EmailFolderBean;
 import com.barosanu.model.table.BoldableRowFactory;
 import com.barosanu.view.ViewFactory;
 
+import DONOTCOMMIT.DONOTCOMMIT;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -99,24 +98,23 @@ public class MainController extends AbstractController implements Initializable{
 		emailFoldersTreeView.setRoot(root);		
 		emailFoldersTreeView.setShowRoot(false);
 
-		try {
-			EmailAccountBean emailAccount = new EmailAccountBean("", "");
-			EmailFolderBean<String> barosanu = new EmailFolderBean<String>(emailAccount.getEmailAdress());
-			root.getChildren().add(barosanu);
-			FetchFoldersService fetchFoldersService = new FetchFoldersService(barosanu, emailAccount);
-			fetchFoldersService.restart();
-		} catch (Exception e1) {
-			e1.printStackTrace();
-		}
-		try {
-			EmailAccountBean emailAccount2 = new EmailAccountBean("", "");
-			EmailFolderBean<String> barosanu2 = new EmailFolderBean<String>(emailAccount2.getEmailAdress());
-			root.getChildren().add(barosanu2);
-			FetchFoldersService fetchFoldersService = new FetchFoldersService(barosanu2, emailAccount2);
-			fetchFoldersService.restart();
-		} catch (Exception e1) {
-			e1.printStackTrace();
-		}
+		
+		CreateAndRegisterEmailAccountService createAndRegisterEmailAccountService1 = 
+				new CreateAndRegisterEmailAccountService(DONOTCOMMIT.address1, 
+				DONOTCOMMIT.password1,
+				root);
+		createAndRegisterEmailAccountService1.restart();
+		createAndRegisterEmailAccountService1.setOnSucceeded(e->{
+			System.out.println(createAndRegisterEmailAccountService1.getValue());
+		});
+		CreateAndRegisterEmailAccountService createAndRegisterEmailAccountService2 = 
+				new CreateAndRegisterEmailAccountService(DONOTCOMMIT.address2, 
+				DONOTCOMMIT.password2,
+				root);
+		createAndRegisterEmailAccountService2.restart();
+		
+		
+		
 		
 		emailTableView.setContextMenu(new ContextMenu(showDetails));
 		

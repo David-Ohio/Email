@@ -2,6 +2,7 @@ package com.barosanu.model;
 
 import java.util.Properties;
 
+import javax.mail.AuthenticationFailedException;
 import javax.mail.Authenticator;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
@@ -14,7 +15,7 @@ public class EmailAccountBean {
 	private Properties properties;
 	private Store store;
 	private Session session;
-	
+	private int loginState = EmailConstants.LOGIN_STATE_NOT_READY;
 	
 	public String getEmailAdress() {
 		return emailAdress;
@@ -31,7 +32,9 @@ public class EmailAccountBean {
 	public Session getSession() {
 		return session;
 	}
-
+	public int getLoginState(){
+		return loginState;
+	}
 
 	public EmailAccountBean(String emailAdress, String password) {
 		this.emailAdress = emailAdress;
@@ -58,8 +61,13 @@ public class EmailAccountBean {
 			this.store = session.getStore();
 			store.connect(properties.getProperty("incomingHost"), emailAdress, password);
 			System.out.println("EmailAccount constructed successfully: " + this);
+			loginState = EmailConstants.LOGIN_STATE_SUCCEDED;
+		}catch(AuthenticationFailedException ae){
+			ae.printStackTrace();
+			loginState = EmailConstants.LOGIN_STATE_FAILED_BY_CREDENTIALS;
 		}catch(Exception e){
 			e.printStackTrace();
+			loginState = EmailConstants.LOGIN_STATE_FAILED_BY_NETWORK;
 		}
 		
 	}
