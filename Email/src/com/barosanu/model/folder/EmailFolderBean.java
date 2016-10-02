@@ -7,19 +7,20 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
 
-public class EmailFolderBean<T> extends TreeItem<String>{
+public class EmailFolderBean<T> extends TreeItem<String> {
 	
-	private boolean topElement = false;
-	private int unreadMessagesCount;
+	private boolean topElement  = false;
+	private int unreadMessageCount;
 	private String name;
 	@SuppressWarnings("unused")
 	private String completeName;
 	private ObservableList<EmailMessageBean> data = FXCollections.observableArrayList();
 	
 	/**
-	 * Constructor for the top element
+	 * Constructor for top elements
 	 * @param value
 	 */
+	
 	public EmailFolderBean(String value){
 		super(value, ViewFactory.defaultFactory.resolveIcon(value));
 		this.name = value;
@@ -29,46 +30,48 @@ public class EmailFolderBean<T> extends TreeItem<String>{
 		this.setExpanded(true);
 	}
 	
-	/**
-	 * Constructor for email folders
-	 * @param value
-	 * @param completeName
-	 */
-	public EmailFolderBean(String value, String completeName){
+	public EmailFolderBean(String value, String compleName){
 		super(value, ViewFactory.defaultFactory.resolveIcon(value));
 		this.name = value;
-		this.completeName = completeName;
+		this.completeName = compleName;
 	}
 	
+	private void updateValue(){
+		if(unreadMessageCount > 0){
+			this.setValue((String)(name + "(" + unreadMessageCount + ")"));
+		}else{
+			this.setValue(name);
+		}
+	}
+	
+	public void incrementUnreadMessagesCount(int newMessages){
+		unreadMessageCount = unreadMessageCount + newMessages;
+		updateValue();
+	}
+	
+	public void decrementUnreadMessagesCount(){
+		unreadMessageCount--;
+		updateValue();
+	}
 	
 	public void addEmail(EmailMessageBean message){
 		data.add(message);
 		if(!message.isRead()){
-			incrementUnreadMessageCount(1);
-		}		
+			incrementUnreadMessagesCount(1);
+		}
 	}
-
-	public void incrementUnreadMessageCount(int newMessages){
-		unreadMessagesCount = unreadMessagesCount + newMessages;
-		updateValue();
-	}
-	public void decrementUreadMessagesCount(){
-		unreadMessagesCount--;
-		updateValue();
+	
+	public boolean isTopElement(){
+		return topElement;
 	}
 	
 	public ObservableList<EmailMessageBean> getData(){
 		return data;
 	}
 	
-	private void updateValue(){
-		if(unreadMessagesCount>0){
-			this.setValue((String) (name + "(" + unreadMessagesCount + ")"));
-		}else{
-			this.setValue(name);
-		}		
-	}
-	public boolean isTopElement(){
-		return topElement;
-	}
+	
+	
+	
+	
+	
 }

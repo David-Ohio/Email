@@ -64,12 +64,12 @@ public class MainController extends AbstractController implements Initializable{
     	if(message != null){
     		boolean value = message.isRead();
     		message.setRead(!value);
-    		EmailFolderBean<String>  selectedFolder = getModelAccess().getSelectedFolder();
+    		EmailFolderBean<String> selectedFolder = getModelAccess().getSelectedFolder();
     		if(selectedFolder != null){
     			if(value){
-    				selectedFolder.incrementUnreadMessageCount(1);
+    				selectedFolder.incrementUnreadMessagesCount(1);
     			}else{
-    				selectedFolder.decrementUreadMessagesCount();
+    				selectedFolder.decrementUnreadMessagesCount();
     			}
     		}
     	}
@@ -95,31 +95,24 @@ public class MainController extends AbstractController implements Initializable{
 		});
 		
 		
-		EmailFolderBean<String> root = new EmailFolderBean<String>("");
-		emailFoldersTreeView.setRoot(root);		
+		EmailFolderBean<String> root = new EmailFolderBean<>("");
+		emailFoldersTreeView.setRoot(root);
 		emailFoldersTreeView.setShowRoot(false);
-//		root.setGraphic(viewfactory.resolveIcon(root.getValue()));		
-//		TreeItem<String> Inbox = new TreeItem<String>("Inbox", viewfactory.resolveIcon("Inbox"));
-//		TreeItem<String> Sent = new TreeItem<String>("Sent", viewfactory.resolveIcon("Sent"));
-//			TreeItem<String> Subitem1 = new TreeItem<String>("Subitem1", viewfactory.resolveIcon("Subitem1"));
-//			TreeItem<String> Subitem2 = new TreeItem<String>("Subitem2",viewfactory.resolveIcon("Subitem2"));
-//			Sent.getChildren().addAll(Subitem1, Subitem2);
-//		TreeItem<String> Spam = new TreeItem<String>("Spam", viewfactory.resolveIcon("Spam"));
-//		TreeItem<String> Trash = new TreeItem<String>("Trash", viewfactory.resolveIcon("Trash"));		
-//		root.getChildren().addAll(Inbox, Sent, Spam, Trash);
-		EmailFolderBean<String> barosanu = new EmailFolderBean<String>("example@yahoo.com");
+		
+		EmailFolderBean<String> barosanu = new EmailFolderBean<>("example@yahoo.com");
 		root.getChildren().add(barosanu);
-		EmailFolderBean<String> Inbox = new EmailFolderBean<String>("Inbox", "CompleteInbox");
-		EmailFolderBean<String> Sent = new EmailFolderBean<String>("Sent", "CompleteSent");
-			Sent.getChildren().add(new EmailFolderBean<String>("Subfoler1", "Subfoler1"));
-			Sent.getChildren().add(new EmailFolderBean<String>("Subfoler2", "Subfoler2"));
-		EmailFolderBean<String> Spam = new EmailFolderBean<String>("Spam", "CompleteSpam");
+		EmailFolderBean<String> Inbox = new EmailFolderBean<>("Inbox", "CompleteInbox");
+		EmailFolderBean<String> Sent = new EmailFolderBean<>("Sent", "CompleteSent");
+			Sent.getChildren().add(new EmailFolderBean<>("Subfolder1", "SubFolder1Complete"));
+			Sent.getChildren().add(new EmailFolderBean<>("Subfolder2", "SubFolder1Complete2"));
+		EmailFolderBean<String> Spam = new EmailFolderBean<>("Spam", "CompleteSpam");
+		
 		barosanu.getChildren().addAll(Inbox, Sent, Spam);
 		
 		Inbox.getData().addAll(SampleData.Inbox);
 		Sent.getData().addAll(SampleData.Sent);
 		Spam.getData().addAll(SampleData.Spam);
-
+		
 		
 		emailTableView.setContextMenu(new ContextMenu(showDetails));
 		
@@ -128,7 +121,7 @@ public class MainController extends AbstractController implements Initializable{
 			if(item != null && !item.isTopElement()){
 				emailTableView.setItems(item.getData());
 				getModelAccess().setSelectedFolder(item);
-				//clear selected message:
+				//clear the selected message:
 				getModelAccess().setSelectedMessage(null);
 			}
 		});
