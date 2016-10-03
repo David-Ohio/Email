@@ -1,13 +1,14 @@
 package com.barosanu.controller;
 
 import java.net.URL;
-import java.util.Comparator;
+import java.util.Date;
 import java.util.ResourceBundle;
 
 import com.barosanu.controller.services.CreateAndRegisterEmailAccountService;
 import com.barosanu.model.EmailMessageBean;
 import com.barosanu.model.folder.EmailFolderBean;
 import com.barosanu.model.table.BoldableRowFactory;
+import com.barosanu.model.table.FormatableInteger;
 import com.barosanu.view.ViewFactory;
 
 import DONOTCOMMIT.DONOTCOMMIT;
@@ -46,7 +47,10 @@ public class MainController extends AbstractController implements Initializable{
     private TableColumn<EmailMessageBean, String> senderCol;
 
     @FXML
-    private TableColumn<EmailMessageBean, String> sizeCol;
+    private TableColumn<EmailMessageBean, FormatableInteger> sizeCol;
+    
+    @FXML
+    private TableColumn<EmailMessageBean, Date> dateCol;
 	
     @FXML
     private WebView messageRenderer;
@@ -82,22 +86,15 @@ public class MainController extends AbstractController implements Initializable{
 		ViewFactory viewfactory = ViewFactory.defaultFactory;
 		subjectCol.setCellValueFactory(new PropertyValueFactory<EmailMessageBean, String>("subject"));
 		senderCol.setCellValueFactory(new PropertyValueFactory<EmailMessageBean, String>("sender"));
-		sizeCol.setCellValueFactory(new PropertyValueFactory<EmailMessageBean, String>("size"));		
-		sizeCol.setComparator(new Comparator<String>() {			
-			Integer int1, int2;			
-			@Override
-			public int compare(String o1, String o2) {
-					int1 = EmailMessageBean.formattedValues.get(o1);
-					int2 = EmailMessageBean.formattedValues.get(o2);
-					return int1.compareTo(int2);
-			}
-		});
+		sizeCol.setCellValueFactory(new PropertyValueFactory<EmailMessageBean, FormatableInteger>("size"));	
+		dateCol.setCellValueFactory(new PropertyValueFactory<EmailMessageBean, Date>("date"));
 		
+		//BUG: sizeCol doesn't get it's default comparator overridden, have to do this manually!!!
+		sizeCol.setComparator(new FormatableInteger(0));	
 		
 		EmailFolderBean<String> root = new EmailFolderBean<String>("");
 		emailFoldersTreeView.setRoot(root);		
 		emailFoldersTreeView.setShowRoot(false);
-
 		
 		CreateAndRegisterEmailAccountService createAndRegisterEmailAccountService1 = 
 				new CreateAndRegisterEmailAccountService(DONOTCOMMIT.address1, 

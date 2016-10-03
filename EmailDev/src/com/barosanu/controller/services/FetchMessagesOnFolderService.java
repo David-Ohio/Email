@@ -2,9 +2,7 @@ package com.barosanu.controller.services;
 
 import javax.mail.Folder;
 import javax.mail.Message;
-import javax.mail.Flags.Flag;
 
-import com.barosanu.model.EmailMessageBean;
 import com.barosanu.model.folder.EmailFolderBean;
 
 import javafx.concurrent.Service;
@@ -34,16 +32,10 @@ public class FetchMessagesOnFolderService extends Service<Void>{
 				int folderSize = folder.getMessageCount();
 				for(int i = folderSize; i > folderSize - MAX_FOLDER_SIZE && i > 0 ; i--){
 					Message currentMessage = folder.getMessage(i);
-					emailFolder.addEmail(new EmailMessageBean(currentMessage.getSubject(),
-							currentMessage.getFrom()[0].toString(),
-							currentMessage.getSize(),
-							"",
-							currentMessage.getFlags().contains(Flag.SEEN)));
-					}
-				
+					emailFolder.addEmail(currentMessage);
+					}				
 				return null;
-			}
-			
+			}			
 		};
 	}
 	
