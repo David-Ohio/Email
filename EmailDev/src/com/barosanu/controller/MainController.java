@@ -4,7 +4,10 @@ import java.net.URL;
 import java.util.Date;
 import java.util.ResourceBundle;
 
+import javax.mail.Flags;
+
 import com.barosanu.controller.services.CreateAndRegisterEmailAccountService;
+import com.barosanu.controller.services.MessageRendererService;
 import com.barosanu.model.EmailMessageBean;
 import com.barosanu.model.folder.EmailFolderBean;
 import com.barosanu.model.table.BoldableRowFactory;
@@ -12,6 +15,7 @@ import com.barosanu.model.table.FormatableInteger;
 import com.barosanu.view.ViewFactory;
 
 import DONOTCOMMIT.DONOTCOMMIT;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -35,6 +39,8 @@ public class MainController extends AbstractController implements Initializable{
 	@FXML
     private TreeView<String> emailFoldersTreeView;
     private MenuItem showDetails = new MenuItem("show details");
+    private MenuItem markUnread = new MenuItem("mark as unread");
+    private MenuItem deleteMessage = new MenuItem("delete message");
 
 	
     @FXML
@@ -45,6 +51,8 @@ public class MainController extends AbstractController implements Initializable{
 
     @FXML
     private TableColumn<EmailMessageBean, String> senderCol;
+    @FXML
+    private TableColumn<EmailMessageBean, String> recipientCol;
 
     @FXML
     private TableColumn<EmailMessageBean, FormatableInteger> sizeCol;
@@ -62,30 +70,16 @@ public class MainController extends AbstractController implements Initializable{
     void Button1Action(ActionEvent event) {
     	System.out.println("button1 clicked!!");
     }
-    
-    @FXML
-    void changeReadAction() {
-    	EmailMessageBean message = getModelAccess().getSelectedMessage();
-    	if(message != null){
-    		boolean value = message.isRead();
-    		message.setRead(!value);
-    		EmailFolderBean<String>  selectedFolder = getModelAccess().getSelectedFolder();
-    		if(selectedFolder != null){
-    			if(value){
-    				selectedFolder.incrementUnreadMessageCount(1);
-    			}else{
-    				selectedFolder.decrementUreadMessagesCount();
-    			}
-    		}
-    	}
-    }
+    private MessageRendererService messageRendererService;
     
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		messageRendererService = new MessageRendererService(messageRenderer.getEngine());
 		emailTableView.setRowFactory(e-> new BoldableRowFactory<>());
 		ViewFactory viewfactory = ViewFactory.defaultFactory;
 		subjectCol.setCellValueFactory(new PropertyValueFactory<EmailMessageBean, String>("subject"));
 		senderCol.setCellValueFactory(new PropertyValueFactory<EmailMessageBean, String>("sender"));
+		recipientCol.setCellValueFactory(new PropertyValueFactory<EmailMessageBean, String>("recipient"));
 		sizeCol.setCellValueFactory(new PropertyValueFactory<EmailMessageBean, FormatableInteger>("size"));	
 		dateCol.setCellValueFactory(new PropertyValueFactory<EmailMessageBean, Date>("date"));
 		
@@ -113,7 +107,7 @@ public class MainController extends AbstractController implements Initializable{
 		
 		
 		
-		emailTableView.setContextMenu(new ContextMenu(showDetails));
+		emailTableView.setContextMenu(new ContextMenu(showDetails, markUnread, deleteMessage));
 		
 		emailFoldersTreeView.setOnMouseClicked(e ->{
 			EmailFolderBean<String> item = (EmailFolderBean<String>)emailFoldersTreeView.getSelectionModel().getSelectedItem();
@@ -127,17 +121,47 @@ public class MainController extends AbstractController implements Initializable{
 		emailTableView.setOnMouseClicked(e->{
 			EmailMessageBean message = emailTableView.getSelectionModel().getSelectedItem();
 			if(message != null){
+				if(!message.isRead()){
+					message.setRead(true);
+					try {
+						message.getMessageRefference().setFlag(Flags.Flag.SEEN, true);
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+					getModelAccess().getSelectedFolder().decrementUreadMessagesCount();
+				}
 				getModelAccess().setSelectedMessage(message);
-				messageRenderer.getEngine().loadContent(message.getContent());
+				messageRendererService.setMessageToRender(message);
+				Platform.runLater(messageRendererService);
 			}
 		});
-		showDetails.setOnAction(e->{
-			
+		showDetails.setOnAction(e->{			
 			Scene scene = viewfactory.getEmailDetailsScene();
 			Stage stage = new Stage();
 			stage.setScene(scene);
 			stage.show();
-		});		
+		});
+		markUnread.setOnAction(e->{
+			EmailMessageBean message = emailTableView.getSelectionModel().getSelectedItem();
+			getModelAccess().getSelectedFolder().incrementUnreadMessageCount(1);
+			message.setRead(false);
+			try {
+				message.getMessageRefference().setFlag(Flags.Flag.SEEN, false);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+		});
+		deleteMessage.setOnAction(e->{
+			EmailMessageBean message = emailTableView.getSelectionModel().getSelectedItem();
+			try {
+				message.getMessageRefference().setFlag(Flags.Flag.DELETED, true);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+				return;
+			}
+			getModelAccess().getSelectedFolder().getData().remove(message);
+		});
+		
 		
 		
 	}

@@ -11,18 +11,18 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.web.WebView?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="702.0" prefWidth="1140.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="694.0" prefWidth="1223.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Button fx:id="Button1" layoutX="53.0" layoutY="21.0" mnemonicParsing="false" onAction="#Button1Action" text="Button1" />
       <Button layoutX="122.0" layoutY="21.0" mnemonicParsing="false" text="Button" />
-      <Button layoutX="190.0" layoutY="21.0" mnemonicParsing="false" onAction="#changeReadAction" text="Change readProperty" />
       <TreeView fx:id="emailFoldersTreeView" layoutX="14.0" layoutY="60.0" prefHeight="630.0" prefWidth="218.0" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="60.0" />
       <TableView fx:id="emailTableView" layoutX="233.0" layoutY="60.0" prefHeight="215.0" prefWidth="902.0" AnchorPane.leftAnchor="233.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="60.0">
          <columns>
             <TableColumn fx:id="subjectCol" prefWidth="234.0" text="Subject" />
-            <TableColumn fx:id="senderCol" prefWidth="229.0" text="Sender" />
-            <TableColumn fx:id="sizeCol" prefWidth="78.0" text="Size" />
-            <TableColumn fx:id="dateCol" prefWidth="75.0" text="Date" />
+            <TableColumn fx:id="senderCol" prefWidth="250.0" text="Sender" />
+            <TableColumn fx:id="recipientCol" prefWidth="239.0" text="Recipient" />
+            <TableColumn fx:id="dateCol" prefWidth="167.0" text="Date" />
+            <TableColumn fx:id="sizeCol" prefWidth="67.0" text="Size" />
          </columns></TableView>
       <WebView fx:id="messageRenderer" layoutX="232.0" layoutY="275.0" prefHeight="416.0" prefWidth="902.0" AnchorPane.bottomAnchor="11.0" AnchorPane.leftAnchor="232.0" AnchorPane.rightAnchor="6.0" AnchorPane.topAnchor="275.0" />
    </children>

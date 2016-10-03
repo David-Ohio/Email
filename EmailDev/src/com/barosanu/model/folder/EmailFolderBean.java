@@ -3,6 +3,7 @@ package com.barosanu.model.folder;
 import javax.mail.Flags.Flag;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage.RecipientType;
 
 import com.barosanu.model.EmailMessageBean;
 import com.barosanu.view.ViewFactory;
@@ -49,10 +50,11 @@ public class EmailFolderBean<T> extends TreeItem<String>{
 		boolean messageIsRead = message.getFlags().contains(Flag.SEEN);
 		EmailMessageBean emailMessageBean= new EmailMessageBean(message.getSubject(), 
 				message.getFrom()[0].toString(),
+				message.getRecipients(RecipientType.TO)[0].toString(),
 				message.getSize(), 
-				"", 
 				messageIsRead, 
-				message.getSentDate());
+				message.getSentDate(),
+				message);
 		data.add(emailMessageBean);
 		if(!messageIsRead){
 			incrementUnreadMessageCount(1);
