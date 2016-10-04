@@ -22,6 +22,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -41,31 +42,25 @@ public class MainController extends AbstractController implements Initializable{
     private MenuItem showDetails = new MenuItem("show details");
     private MenuItem markUnread = new MenuItem("mark as unread");
     private MenuItem deleteMessage = new MenuItem("delete message");
-
 	
     @FXML
-    private TableView<EmailMessageBean> emailTableView;
-	
+    private Label attachementsLabel;
+    @FXML
+    private TableView<EmailMessageBean> emailTableView;	
     @FXML
     private TableColumn<EmailMessageBean, String> subjectCol;
-
     @FXML
     private TableColumn<EmailMessageBean, String> senderCol;
     @FXML
     private TableColumn<EmailMessageBean, String> recipientCol;
-
     @FXML
-    private TableColumn<EmailMessageBean, FormatableInteger> sizeCol;
-    
+    private TableColumn<EmailMessageBean, FormatableInteger> sizeCol;    
     @FXML
-    private TableColumn<EmailMessageBean, Date> dateCol;
-	
+    private TableColumn<EmailMessageBean, Date> dateCol;	
     @FXML
-    private WebView messageRenderer;
-	
+    private WebView messageRenderer;	
     @FXML
     private Button Button1;
-
     @FXML
     void Button1Action(ActionEvent event) {
     	System.out.println("button1 clicked!!");
@@ -74,7 +69,9 @@ public class MainController extends AbstractController implements Initializable{
     
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		attachementsLabel.textProperty().bind(EmailMessageBean.attachementsLabelValue);
 		messageRendererService = new MessageRendererService(messageRenderer.getEngine());
+		
 		emailTableView.setRowFactory(e-> new BoldableRowFactory<>());
 		ViewFactory viewfactory = ViewFactory.defaultFactory;
 		subjectCol.setCellValueFactory(new PropertyValueFactory<EmailMessageBean, String>("subject"));
@@ -95,17 +92,12 @@ public class MainController extends AbstractController implements Initializable{
 				DONOTCOMMIT.password1,
 				root);
 		createAndRegisterEmailAccountService1.restart();
-		createAndRegisterEmailAccountService1.setOnSucceeded(e->{
-			System.out.println(createAndRegisterEmailAccountService1.getValue());
-		});
+
 		CreateAndRegisterEmailAccountService createAndRegisterEmailAccountService2 = 
 				new CreateAndRegisterEmailAccountService(DONOTCOMMIT.address2, 
 				DONOTCOMMIT.password2,
 				root);
 		createAndRegisterEmailAccountService2.restart();
-		
-		
-		
 		
 		emailTableView.setContextMenu(new ContextMenu(showDetails, markUnread, deleteMessage));
 		
