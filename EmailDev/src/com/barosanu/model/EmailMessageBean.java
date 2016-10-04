@@ -1,8 +1,11 @@
 package com.barosanu.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.mail.Message;
+import javax.mail.internet.MimeBodyPart;
 
 import com.barosanu.model.table.AbstractTableItem;
 import com.barosanu.model.table.FormatableInteger;
@@ -18,6 +21,9 @@ public class EmailMessageBean extends AbstractTableItem{
 	private SimpleObjectProperty<FormatableInteger> size;
 	private SimpleObjectProperty<Date> date;
 	private Message messageRefference;
+	private List<MimeBodyPart> listOfAttachments = new ArrayList<MimeBodyPart>();
+	private StringBuffer attachmentsNames = new StringBuffer("");
+	public static SimpleStringProperty attachementsLabelValue = new SimpleStringProperty("");
 	
 	public EmailMessageBean(String Subject, String Sender, String Recipient, int size, boolean isRead, Date date, Message MessageRefference){
 		super(isRead);
@@ -47,5 +53,11 @@ public class EmailMessageBean extends AbstractTableItem{
 	public Message getMessageRefference() {
 		return messageRefference;
 	}
-	
+	public List<MimeBodyPart> getListOfAttachments() {
+		return listOfAttachments;
+	}
+	public StringBuffer getAttachmentsNames() {
+		return attachmentsNames;
+	}
+
 }

@@ -25,5 +25,6 @@
             <TableColumn fx:id="sizeCol" prefWidth="67.0" text="Size" />
          </columns></TableView>
       <WebView fx:id="messageRenderer" layoutX="232.0" layoutY="275.0" prefHeight="416.0" prefWidth="902.0" AnchorPane.bottomAnchor="11.0" AnchorPane.leftAnchor="232.0" AnchorPane.rightAnchor="6.0" AnchorPane.topAnchor="275.0" />
+      <Label fx:id="attachementsLabel" layoutX="634.0" layoutY="25.0" prefHeight="17.0" prefWidth="575.0" text="Label" />
    </children>
 </AnchorPane>

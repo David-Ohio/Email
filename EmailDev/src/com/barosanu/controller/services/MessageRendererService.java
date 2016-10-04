@@ -1,8 +1,5 @@
 package com.barosanu.controller.services;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.Multipart;
@@ -16,8 +13,6 @@ public class MessageRendererService implements Runnable{
 	
 	private EmailMessageBean messageToRender;
 	private WebEngine messageRendererEngine;
-	private List<MimeBodyPart> listOfAttachments = new ArrayList<MimeBodyPart>();
-	public StringBuffer attachmentsNames  =new StringBuffer();
 
 	public MessageRendererService(WebEngine messageRendererEngine) {
 		this.messageRendererEngine = messageRendererEngine;
@@ -29,8 +24,7 @@ public class MessageRendererService implements Runnable{
 
 	@Override
 	public void run() {
-		listOfAttachments.clear();
-		attachmentsNames.setLength(0);//this clears the String buffer
+		EmailMessageBean.attachementsLabelValue.set("");
 		Message message = messageToRender.getMessageRefference();
 		try {
 			String messageType = message.getContentType();
@@ -51,10 +45,11 @@ public class MessageRendererService implements Runnable{
 						}
 						
 					//here the attachments are handled
-					}else if(contentType.contains("APPLICATION") || contentType.contains("application")){
+					}else if(contentType.toLowerCase().contains("application")){
 							MimeBodyPart mbp = (MimeBodyPart)bp;
-							listOfAttachments.add(mbp);
-							attachmentsNames.append(mbp.getFileName() + " ");
+							//TODO: find a way to inform UI about this:
+							messageToRender.getListOfAttachments().add(mbp);
+							messageToRender.getAttachmentsNames().append(mbp.getFileName() + " ");
 							
 					//Sometimes the text content of the message is encapsulated in another multipart,
 					//so we have to iterate again through it.		
@@ -69,6 +64,7 @@ public class MessageRendererService implements Runnable{
 				   }  
 			}
 				messageRendererEngine.loadContent(sb.toString());
+				EmailMessageBean.attachementsLabelValue.set(messageToRender.getAttachmentsNames().toString());
 			}
 		} catch (Exception e) {
 			System.out.println("Exception while vizualizing message: ");
