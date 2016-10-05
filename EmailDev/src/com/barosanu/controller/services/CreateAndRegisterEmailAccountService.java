@@ -1,5 +1,6 @@
 package com.barosanu.controller.services;
 
+import com.barosanu.controller.ModelAccess;
 import com.barosanu.model.EmailAccountBean;
 import com.barosanu.model.EmailConstants;
 import com.barosanu.model.folder.EmailFolderBean;
@@ -12,12 +13,14 @@ public class CreateAndRegisterEmailAccountService extends Service<Integer>{
 	private String emailAddress;
 	private String password;
 	private EmailFolderBean<String> folderRoot;
+	private ModelAccess modelAccess;
 
 	public CreateAndRegisterEmailAccountService(String emailAddress, String password,
-			EmailFolderBean<String> folderRoot) {
+			EmailFolderBean<String> folderRoot, ModelAccess modelAccess) {
 		this.emailAddress = emailAddress;
 		this.password = password;
 		this.folderRoot = folderRoot;
+		this.modelAccess = modelAccess;
 	}
 
 	@Override
@@ -31,7 +34,7 @@ public class CreateAndRegisterEmailAccountService extends Service<Integer>{
 								emailAccount.getEmailAdress());
 						folderRoot.getChildren().add(emailFolderBean);
 						FetchFoldersService fetchFoldersService = new FetchFoldersService(emailFolderBean,
-								emailAccount);
+								emailAccount, modelAccess);
 						fetchFoldersService.restart();
 					}
 				

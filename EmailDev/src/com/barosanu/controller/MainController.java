@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import javax.mail.Flags;
 
 import com.barosanu.controller.services.CreateAndRegisterEmailAccountService;
+import com.barosanu.controller.services.FolderUpdaterService;
 import com.barosanu.controller.services.MessageRendererService;
 import com.barosanu.model.EmailMessageBean;
 import com.barosanu.model.folder.EmailFolderBean;
@@ -66,9 +67,12 @@ public class MainController extends AbstractController implements Initializable{
     	System.out.println("button1 clicked!!");
     }
     private MessageRendererService messageRendererService;
+    private FolderUpdaterService folderUpdaterService;
     
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		folderUpdaterService = new FolderUpdaterService(getModelAccess());
+		folderUpdaterService.start();
 		attachementsLabel.textProperty().bind(EmailMessageBean.attachementsLabelValue);
 		messageRendererService = new MessageRendererService(messageRenderer.getEngine());
 		
@@ -90,13 +94,15 @@ public class MainController extends AbstractController implements Initializable{
 		CreateAndRegisterEmailAccountService createAndRegisterEmailAccountService1 = 
 				new CreateAndRegisterEmailAccountService(DONOTCOMMIT.address1, 
 				DONOTCOMMIT.password1,
-				root);
+				root,
+				getModelAccess());
 		createAndRegisterEmailAccountService1.restart();
 
 		CreateAndRegisterEmailAccountService createAndRegisterEmailAccountService2 = 
 				new CreateAndRegisterEmailAccountService(DONOTCOMMIT.address2, 
 				DONOTCOMMIT.password2,
-				root);
+				root,
+				getModelAccess());
 		createAndRegisterEmailAccountService2.restart();
 		
 		emailTableView.setContextMenu(new ContextMenu(showDetails, markUnread, deleteMessage));

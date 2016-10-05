@@ -59,5 +59,6 @@ public class EmailMessageBean extends AbstractTableItem{
 	public StringBuffer getAttachmentsNames() {
 		return attachmentsNames;
 	}
+	
 
 }

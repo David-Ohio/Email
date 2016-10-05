@@ -60,6 +60,21 @@ public class EmailFolderBean<T> extends TreeItem<String>{
 			incrementUnreadMessageCount(1);
 		}		
 	}
+	
+	public void addEmail(Message message, int index) throws MessagingException{
+		boolean messageIsRead = message.getFlags().contains(Flag.SEEN);
+		EmailMessageBean emailMessageBean= new EmailMessageBean(message.getSubject(), 
+				message.getFrom()[0].toString(),
+				message.getRecipients(RecipientType.TO)[0].toString(),
+				message.getSize(), 
+				messageIsRead, 
+				message.getSentDate(),
+				message);
+		data.add(index, emailMessageBean);
+		if(!messageIsRead){
+			incrementUnreadMessageCount(1);
+		}		
+	}
 
 	public void incrementUnreadMessageCount(int newMessages){
 		unreadMessagesCount = unreadMessagesCount + newMessages;
