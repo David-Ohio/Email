@@ -10,6 +10,7 @@ import javax.mail.internet.MimeBodyPart;
 import com.barosanu.model.table.AbstractTableItem;
 import com.barosanu.model.table.FormatableInteger;
 
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 
@@ -23,7 +24,10 @@ public class EmailMessageBean extends AbstractTableItem{
 	private Message messageRefference;
 	private List<MimeBodyPart> listOfAttachments = new ArrayList<MimeBodyPart>();
 	private StringBuffer attachmentsNames = new StringBuffer("");
+	
+	private boolean hasAttachments = false;
 	public static SimpleStringProperty attachementsLabelValue = new SimpleStringProperty("");
+	public static SimpleBooleanProperty attachmentsBtnVisible = new SimpleBooleanProperty(false);
 	
 	public EmailMessageBean(String Subject, String Sender, String Recipient, int size, boolean isRead, Date date, Message MessageRefference){
 		super(isRead);
@@ -59,6 +63,23 @@ public class EmailMessageBean extends AbstractTableItem{
 	public StringBuffer getAttachmentsNames() {
 		return attachmentsNames;
 	}
-	
 
+	public boolean isHasAttachments() {
+		return hasAttachments;
+	}
+
+	public void setHasAttachments(boolean hasAttachments) {
+		this.hasAttachments = hasAttachments;
+	}
+	
+	public static EmailMessageBean copy(EmailMessageBean emailMessageBean){
+		return new EmailMessageBean(emailMessageBean.subject.get(), 
+				emailMessageBean.sender.get(), 
+				emailMessageBean.recipient.get(), 
+				emailMessageBean.size.get().getSize(),
+				emailMessageBean.isRead(), 
+				emailMessageBean.date.get(), 
+				emailMessageBean.getMessageRefference());
+	}
+	
 }

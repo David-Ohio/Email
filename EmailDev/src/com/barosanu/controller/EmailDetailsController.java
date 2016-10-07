@@ -25,11 +25,14 @@ public class EmailDetailsController extends AbstractController implements Initia
     @FXML
     private Label SenderLabel;
     
+    private EmailMessageBean selectedMessage;
+    
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		
-		EmailMessageBean selectedMessage = getModelAccess().getSelectedMessage();
-		
+		//TODO: implement delete function
+
+		selectedMessage = EmailMessageBean.copy(getModelAccess().getSelectedMessage());
+
 		
 		subjectLabel.setText("Subject: " + selectedMessage.getSubject());
 		SenderLabel.setText("Sender: " + selectedMessage.getSender());

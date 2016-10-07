@@ -9,6 +9,7 @@ import javax.mail.Flags;
 import com.barosanu.controller.services.CreateAndRegisterEmailAccountService;
 import com.barosanu.controller.services.FolderUpdaterService;
 import com.barosanu.controller.services.MessageRendererService;
+import com.barosanu.controller.services.SaveAttachmentsService;
 import com.barosanu.model.EmailMessageBean;
 import com.barosanu.model.folder.EmailFolderBean;
 import com.barosanu.model.table.BoldableRowFactory;
@@ -17,7 +18,6 @@ import com.barosanu.view.ViewFactory;
 
 import DONOTCOMMIT.DONOTCOMMIT;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
@@ -61,16 +61,18 @@ public class MainController extends AbstractController implements Initializable{
     @FXML
     private WebView messageRenderer;	
     @FXML
-    private Button Button1;
+    private Button downloadAttachBtn;
     @FXML
-    void Button1Action(ActionEvent event) {
-    	System.out.println("button1 clicked!!");
+    void downloadAttachBtnAction() {
+    	SaveAttachmentsService saveAttachmentsService = new SaveAttachmentsService(getModelAccess().getSelectedMessage());
+    	saveAttachmentsService.restart();
     }
     private MessageRendererService messageRendererService;
     private FolderUpdaterService folderUpdaterService;
     
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		downloadAttachBtn.visibleProperty().bind(EmailMessageBean.attachmentsBtnVisible);
 		folderUpdaterService = new FolderUpdaterService(getModelAccess());
 		folderUpdaterService.start();
 		attachementsLabel.textProperty().bind(EmailMessageBean.attachementsLabelValue);

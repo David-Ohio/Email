@@ -24,7 +24,9 @@ public class MessageRendererService implements Runnable{
 
 	@Override
 	public void run() {
+		
 		EmailMessageBean.attachementsLabelValue.set("");
+		EmailMessageBean.attachmentsBtnVisible.set(false);
 		Message message = messageToRender.getMessageRefference();
 		try {
 			String messageType = message.getContentType();
@@ -50,6 +52,7 @@ public class MessageRendererService implements Runnable{
 							//TODO: find a way to inform UI about this:
 							messageToRender.getListOfAttachments().add(mbp);
 							messageToRender.getAttachmentsNames().append(mbp.getFileName() + " ");
+							messageToRender.setHasAttachments(true);
 							
 					//Sometimes the text content of the message is encapsulated in another multipart,
 					//so we have to iterate again through it.		
@@ -65,6 +68,9 @@ public class MessageRendererService implements Runnable{
 			}
 				messageRendererEngine.loadContent(sb.toString());
 				EmailMessageBean.attachementsLabelValue.set(messageToRender.getAttachmentsNames().toString());
+				if(messageToRender.isHasAttachments()){
+					EmailMessageBean.attachmentsBtnVisible.set(true);
+				}
 			}
 		} catch (Exception e) {
 			System.out.println("Exception while vizualizing message: ");
