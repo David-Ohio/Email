@@ -5,15 +5,11 @@ import java.util.Comparator;
 import java.util.ResourceBundle;
 
 import com.barosanu.controller.services.CreateAndRegisterEmailAccountService;
-import com.barosanu.model.EmailAccountBean;
 import com.barosanu.model.EmailMessageBean;
 import com.barosanu.model.folder.EmailFolderBean;
 import com.barosanu.model.table.BoldableRowFactory;
 import com.barosanu.view.ViewFactory;
 
-import javafx.collections.ObservableList;
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -80,7 +76,6 @@ public class MainController extends AbstractController implements Initializable{
     }
     
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		emailTableView.setRowFactory(e-> new BoldableRowFactory<>());

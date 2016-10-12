@@ -1,5 +1,9 @@
 package com.barosanu.model.folder;
 
+import javax.mail.Flags.Flag;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+
 import com.barosanu.model.EmailMessageBean;
 import com.barosanu.view.ViewFactory;
 
@@ -54,12 +58,21 @@ public class EmailFolderBean<T> extends TreeItem<String> {
 		updateValue();
 	}
 	
-	public void addEmail(EmailMessageBean message){
-		data.add(message);
-		if(!message.isRead()){
+	public void addEmail(Message message) throws MessagingException{
+		boolean isRead = message.getFlags().contains(Flag.SEEN);
+		EmailMessageBean emailMessageBean = new EmailMessageBean(message.getSubject(),
+				message.getFrom()[0].toString(),
+				message.getSize(),
+				"",
+				isRead);
+		data.add(emailMessageBean);
+		if(!isRead){
 			incrementUnreadMessagesCount(1);
 		}
+		
 	}
+	
+	
 	
 	public boolean isTopElement(){
 		return topElement;

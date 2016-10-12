@@ -12,7 +12,6 @@ public class Test {
 		final EmailAccountBean emailAccountBean = new EmailAccountBean("barosanuemailtest@gmail.com", "asfasdasdaAA123a");
 
 		ObservableList<EmailMessageBean> data = FXCollections.observableArrayList();
-		emailAccountBean.addEmailsToData(data);
 	}
 
 }
