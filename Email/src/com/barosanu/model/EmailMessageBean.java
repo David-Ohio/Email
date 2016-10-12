@@ -24,6 +24,15 @@ public class EmailMessageBean extends AbstractTableItem{
 		this.content = Content;
 	}
 	
+	@Override
+	public String toString() {
+		return "EmailMessageBean "
+				+ "sender=" + sender.get() + 
+				", subject=" + subject.get() +
+				", size=" + size.get() + 
+				", content=" + content;
+	}
+
 	public String getSender(){
 		return sender.get();
 	}

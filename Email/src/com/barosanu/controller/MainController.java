@@ -4,12 +4,16 @@ import java.net.URL;
 import java.util.Comparator;
 import java.util.ResourceBundle;
 
+import com.barosanu.controller.services.CreateAndRegisterEmailAccountService;
+import com.barosanu.model.EmailAccountBean;
 import com.barosanu.model.EmailMessageBean;
-import com.barosanu.model.SampleData;
 import com.barosanu.model.folder.EmailFolderBean;
 import com.barosanu.model.table.BoldableRowFactory;
 import com.barosanu.view.ViewFactory;
 
+import javafx.collections.ObservableList;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -55,7 +59,7 @@ public class MainController extends AbstractController implements Initializable{
 
     @FXML
     void Button1Action(ActionEvent event) {
-    	System.out.println("button1 clicked!!");
+    	
     }
     
     @FXML
@@ -99,19 +103,14 @@ public class MainController extends AbstractController implements Initializable{
 		emailFoldersTreeView.setRoot(root);
 		emailFoldersTreeView.setShowRoot(false);
 		
-		EmailFolderBean<String> barosanu = new EmailFolderBean<>("example@yahoo.com");
-		root.getChildren().add(barosanu);
-		EmailFolderBean<String> Inbox = new EmailFolderBean<>("Inbox", "CompleteInbox");
-		EmailFolderBean<String> Sent = new EmailFolderBean<>("Sent", "CompleteSent");
-			Sent.getChildren().add(new EmailFolderBean<>("Subfolder1", "SubFolder1Complete"));
-			Sent.getChildren().add(new EmailFolderBean<>("Subfolder2", "SubFolder1Complete2"));
-		EmailFolderBean<String> Spam = new EmailFolderBean<>("Spam", "CompleteSpam");
+		CreateAndRegisterEmailAccountService createAndRegisterEmailAccountService1 = 
+				new CreateAndRegisterEmailAccountService("barosanuemailtest@gmail.com", "asfasdasdaAA123a", root);
+		createAndRegisterEmailAccountService1.start();
+		CreateAndRegisterEmailAccountService createAndRegisterEmailAccountService2 = 
+				new CreateAndRegisterEmailAccountService("barosanuemailtest2@gmail.com", "asfasdasdaAA123a", root);
+		createAndRegisterEmailAccountService2.start();
 		
-		barosanu.getChildren().addAll(Inbox, Sent, Spam);
 		
-		Inbox.getData().addAll(SampleData.Inbox);
-		Sent.getData().addAll(SampleData.Sent);
-		Spam.getData().addAll(SampleData.Spam);
 		
 		
 		emailTableView.setContextMenu(new ContextMenu(showDetails));
