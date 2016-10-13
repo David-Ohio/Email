@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.ResourceBundle;
 
 import com.barosanu.controller.services.CreateAndRegisterEmailAccountService;
+import com.barosanu.controller.services.FolderUpdaterService;
 import com.barosanu.model.EmailMessageBean;
 import com.barosanu.model.folder.EmailFolderBean;
 import com.barosanu.model.table.BoldableRowFactory;
@@ -78,6 +79,10 @@ public class MainController extends AbstractController implements Initializable{
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		FolderUpdaterService folderUpdaterService = new FolderUpdaterService(getModelAccess().getFoldersList());
+		folderUpdaterService.start();
+		
+		
 		emailTableView.setRowFactory(e-> new BoldableRowFactory<>());
 		ViewFactory viewfactory = ViewFactory.defaultFactory;
 		subjectCol.setCellValueFactory(new PropertyValueFactory<EmailMessageBean, String>("subject"));
@@ -99,10 +104,16 @@ public class MainController extends AbstractController implements Initializable{
 		emailFoldersTreeView.setShowRoot(false);
 		
 		CreateAndRegisterEmailAccountService createAndRegisterEmailAccountService1 = 
-				new CreateAndRegisterEmailAccountService("barosanuemailtest@gmail.com", "asfasdasdaAA123a", root);
+				new CreateAndRegisterEmailAccountService("barosanuemailtest@gmail.com",
+						"asfasdasdaAA123a",
+						root,
+						getModelAccess());
 		createAndRegisterEmailAccountService1.start();
 		CreateAndRegisterEmailAccountService createAndRegisterEmailAccountService2 = 
-				new CreateAndRegisterEmailAccountService("barosanuemailtest2@gmail.com", "asfasdasdaAA123a", root);
+				new CreateAndRegisterEmailAccountService("barosanuemailtest2@gmail.com", 
+						"asfasdasdaAA123a", 
+						root,
+						getModelAccess());
 		createAndRegisterEmailAccountService2.start();
 		
 		
