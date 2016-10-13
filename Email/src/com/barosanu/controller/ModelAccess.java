@@ -1,5 +1,10 @@
 package com.barosanu.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.mail.Folder;
+
 import com.barosanu.model.EmailMessageBean;
 import com.barosanu.model.folder.EmailFolderBean;
 
@@ -25,5 +30,15 @@ public class ModelAccess {
 	}
 
 	private EmailFolderBean<String> selectedFolder;
+	
+	private List<Folder> foldersList = new ArrayList<Folder>();
+	
+	public List<Folder> getFoldersList(){
+		return  foldersList;
+	}
+	
+	public void addFolder(Folder folder){
+		foldersList.add(folder);
+	}
 
 }
