@@ -4,13 +4,17 @@ import java.net.URL;
 import java.util.Comparator;
 import java.util.ResourceBundle;
 
+import javax.swing.SwingUtilities;
+
 import com.barosanu.controller.services.CreateAndRegisterEmailAccountService;
 import com.barosanu.controller.services.FolderUpdaterService;
+import com.barosanu.controller.services.MessageRendererService;
 import com.barosanu.model.EmailMessageBean;
 import com.barosanu.model.folder.EmailFolderBean;
 import com.barosanu.model.table.BoldableRowFactory;
 import com.barosanu.view.ViewFactory;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -53,6 +57,7 @@ public class MainController extends AbstractController implements Initializable{
 	
     @FXML
     private Button Button1;
+    private MessageRendererService messageRendererService;
 
     @FXML
     void Button1Action(ActionEvent event) {
@@ -76,9 +81,14 @@ public class MainController extends AbstractController implements Initializable{
     	}
     }
     
+    
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		messageRendererService = new MessageRendererService(messageRenderer.getEngine());
+		
+		
+		
 		FolderUpdaterService folderUpdaterService = new FolderUpdaterService(getModelAccess().getFoldersList());
 		folderUpdaterService.start();
 		
@@ -130,13 +140,19 @@ public class MainController extends AbstractController implements Initializable{
 				getModelAccess().setSelectedMessage(null);
 			}
 		});
+		
+		
+		
 		emailTableView.setOnMouseClicked(e->{
 			EmailMessageBean message = emailTableView.getSelectionModel().getSelectedItem();
 			if(message != null){
 				getModelAccess().setSelectedMessage(message);
-				messageRenderer.getEngine().loadContent(message.getContent());
+				messageRendererService.setMessageToRender(message);
+				//messageRendererService.restart();			
+				Platform.runLater(messageRendererService);//on Application thread!!
 			}
 		});
+		
 		showDetails.setOnAction(e->{
 			
 			Scene scene = viewfactory.getEmailDetailsScene();

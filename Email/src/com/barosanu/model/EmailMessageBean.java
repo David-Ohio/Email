@@ -3,6 +3,8 @@ package com.barosanu.model;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.mail.Message;
+
 import com.barosanu.model.table.AbstractTableItem;
 
 import javafx.beans.property.SimpleStringProperty;
@@ -14,14 +16,15 @@ public class EmailMessageBean extends AbstractTableItem{
 	private SimpleStringProperty sender;
 	private SimpleStringProperty subject;
 	private SimpleStringProperty size;
-	private String content;
+	private Message messageReference;
 	
-	public EmailMessageBean(String Subject, String Sender, int size, String Content, boolean isRead){
+	public EmailMessageBean(String Subject, String Sender, int size,  boolean isRead, Message messageReference){
 		super(isRead);
 		this.subject = new SimpleStringProperty(Subject);
 		this.sender = new SimpleStringProperty(Sender);
 		this.size = new SimpleStringProperty(formatSize(size));
-		this.content = Content;
+		this.messageReference = messageReference;
+
 	}
 	
 	@Override
@@ -29,8 +32,7 @@ public class EmailMessageBean extends AbstractTableItem{
 		return "EmailMessageBean "
 				+ "sender=" + sender.get() + 
 				", subject=" + subject.get() +
-				", size=" + size.get() + 
-				", content=" + content;
+				", size=" + size.get();
 	}
 
 	public String getSender(){
@@ -42,9 +44,7 @@ public class EmailMessageBean extends AbstractTableItem{
 	public String getSize(){
 		return size.get();
 	}
-	public String getContent(){
-		return content;
-	}
+
 	
 	private String formatSize(int size){
 		String returnValue;
@@ -63,5 +63,9 @@ public class EmailMessageBean extends AbstractTableItem{
 		return returnValue;
 		
 	}
-	
+
+	public Message getMessageReference() {
+		return messageReference;
+	}
+
 }
