@@ -17,7 +17,6 @@ import com.barosanu.model.table.FormatableInteger;
 import com.barosanu.view.ViewFactory;
 
 import DONOTCOMMIT.DONOTCOMMIT;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
@@ -25,6 +24,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TreeView;
@@ -43,6 +43,12 @@ public class MainController extends AbstractController implements Initializable{
     private MenuItem showDetails = new MenuItem("show details");
     private MenuItem markUnread = new MenuItem("mark as unread");
     private MenuItem deleteMessage = new MenuItem("delete message");
+
+    @FXML
+    private Label downAttachLabel;
+    @FXML
+    private ProgressIndicator attachProgress;
+    private SaveAttachmentsService saveAttachmentsService;
 	
     @FXML
     private Label attachementsLabel;
@@ -64,18 +70,23 @@ public class MainController extends AbstractController implements Initializable{
     private Button downloadAttachBtn;
     @FXML
     void downloadAttachBtnAction() {
-    	SaveAttachmentsService saveAttachmentsService = new SaveAttachmentsService(getModelAccess().getSelectedMessage());
-    	saveAttachmentsService.restart();
+    	saveAttachmentsService.setEmailMessage(getModelAccess().getSelectedMessage());
+    	if(getModelAccess().getSelectedMessage().getListOfAttachments().size() > 0 ){
+    		saveAttachmentsService.restart();
+    	}
+    	
     }
     private MessageRendererService messageRendererService;
     private FolderUpdaterService folderUpdaterService;
     
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		downloadAttachBtn.visibleProperty().bind(EmailMessageBean.attachmentsBtnVisible);
+		downloadAttachBtn.setDisable(true);
+		attachementsLabel.setText("");
+		saveAttachmentsService = new SaveAttachmentsService(attachProgress, downAttachLabel);
+		attachProgress.progressProperty().bind(saveAttachmentsService.progressProperty());
 		folderUpdaterService = new FolderUpdaterService(getModelAccess());
 		folderUpdaterService.start();
-		attachementsLabel.textProperty().bind(EmailMessageBean.attachementsLabelValue);
 		messageRendererService = new MessageRendererService(messageRenderer.getEngine());
 		
 		emailTableView.setRowFactory(e-> new BoldableRowFactory<>());
@@ -107,6 +118,13 @@ public class MainController extends AbstractController implements Initializable{
 				getModelAccess());
 		createAndRegisterEmailAccountService2.restart();
 		
+		CreateAndRegisterEmailAccountService createAndRegisterEmailAccountService3 = 
+				new CreateAndRegisterEmailAccountService(DONOTCOMMIT.address3, 
+				DONOTCOMMIT.password3,
+				root,
+				getModelAccess());
+		createAndRegisterEmailAccountService3.restart();
+		
 		emailTableView.setContextMenu(new ContextMenu(showDetails, markUnread, deleteMessage));
 		
 		emailFoldersTreeView.setOnMouseClicked(e ->{
@@ -130,9 +148,16 @@ public class MainController extends AbstractController implements Initializable{
 					}
 					getModelAccess().getSelectedFolder().decrementUreadMessagesCount();
 				}
+			if(message.hasAttachments()){
+				downloadAttachBtn.setDisable(false);
+				attachementsLabel.setText(message.getAttachmentsNames());				
+			}else{
+				downloadAttachBtn.setDisable(true);
+				attachementsLabel.setText("");
+			}	
 				getModelAccess().setSelectedMessage(message);
 				messageRendererService.setMessageToRender(message);
-				Platform.runLater(messageRendererService);
+				messageRendererService.restart();
 			}
 		});
 		showDetails.setOnAction(e->{			

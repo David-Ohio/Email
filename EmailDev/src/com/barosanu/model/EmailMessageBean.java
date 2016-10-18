@@ -5,12 +5,12 @@ import java.util.Date;
 import java.util.List;
 
 import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.mail.internet.MimeBodyPart;
 
 import com.barosanu.model.table.AbstractTableItem;
 import com.barosanu.model.table.FormatableInteger;
 
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 
@@ -23,12 +23,8 @@ public class EmailMessageBean extends AbstractTableItem{
 	private SimpleObjectProperty<Date> date;
 	private Message messageRefference;
 	private List<MimeBodyPart> listOfAttachments = new ArrayList<MimeBodyPart>();
-	private StringBuffer attachmentsNames = new StringBuffer("");
-	
-	private boolean hasAttachments = false;
-	public static SimpleStringProperty attachementsLabelValue = new SimpleStringProperty("");
-	public static SimpleBooleanProperty attachmentsBtnVisible = new SimpleBooleanProperty(false);
-	
+	private StringBuffer attachmentsNames = new StringBuffer();
+
 	public EmailMessageBean(String Subject, String Sender, String Recipient, int size, boolean isRead, Date date, Message MessageRefference){
 		super(isRead);
 		this.subject = new SimpleStringProperty(Subject);
@@ -60,16 +56,11 @@ public class EmailMessageBean extends AbstractTableItem{
 	public List<MimeBodyPart> getListOfAttachments() {
 		return listOfAttachments;
 	}
-	public StringBuffer getAttachmentsNames() {
-		return attachmentsNames;
+	public void addAttachement(MimeBodyPart mbp){
+		listOfAttachments.add(mbp);
 	}
-
-	public boolean isHasAttachments() {
-		return hasAttachments;
-	}
-
-	public void setHasAttachments(boolean hasAttachments) {
-		this.hasAttachments = hasAttachments;
+	public void clearAttachmentsList(){
+		listOfAttachments.clear();
 	}
 	
 	/**
@@ -83,6 +74,24 @@ public class EmailMessageBean extends AbstractTableItem{
 				this.isRead(), 
 				this.date.get(), 
 				this.getMessageRefference());
+	}
+	
+	public boolean hasAttachments(){
+		return listOfAttachments.size() > 0;
+	}
+	
+	public String getAttachmentsNames(){
+		attachmentsNames.setLength(0);
+		if(hasAttachments()){
+			for(MimeBodyPart mbp : listOfAttachments){
+				try {
+					attachmentsNames.append(mbp.getFileName() + "; ");
+				} catch (MessagingException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return attachmentsNames.toString();
 	}
 	
 }

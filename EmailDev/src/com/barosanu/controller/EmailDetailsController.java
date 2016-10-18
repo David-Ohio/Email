@@ -6,7 +6,6 @@ import java.util.ResourceBundle;
 import com.barosanu.controller.services.MessageRendererService;
 import com.barosanu.model.EmailMessageBean;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -39,7 +38,7 @@ public class EmailDetailsController extends AbstractController implements Initia
 		
 		MessageRendererService messageRendererService = new MessageRendererService(webView.getEngine());
 		messageRendererService.setMessageToRender(selectedMessage);
-		Platform.runLater(messageRendererService);
+		messageRendererService.restart();
 
 	}
 
