@@ -31,7 +31,7 @@ public class EmailDetailsController extends AbstractController implements Initia
 	public void initialize(URL location, ResourceBundle resources) {
 		//TODO: implement delete function
 
-		selectedMessage = EmailMessageBean.copy(getModelAccess().getSelectedMessage());
+		selectedMessage = getModelAccess().getSelectedMessage().copy();
 
 		
 		subjectLabel.setText("Subject: " + selectedMessage.getSubject());
