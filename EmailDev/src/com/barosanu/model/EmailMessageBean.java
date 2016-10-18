@@ -72,14 +72,17 @@ public class EmailMessageBean extends AbstractTableItem{
 		this.hasAttachments = hasAttachments;
 	}
 	
-	public static EmailMessageBean copy(EmailMessageBean emailMessageBean){
-		return new EmailMessageBean(emailMessageBean.subject.get(), 
-				emailMessageBean.sender.get(), 
-				emailMessageBean.recipient.get(), 
-				emailMessageBean.size.get().getSize(),
-				emailMessageBean.isRead(), 
-				emailMessageBean.date.get(), 
-				emailMessageBean.getMessageRefference());
+	/**
+	 * Returns a new object containing an exact copy of the EmailMessageBean object.
+	 */
+	public EmailMessageBean copy(){
+		return new EmailMessageBean(this.subject.get(), 
+				this.sender.get(), 
+				this.recipient.get(), 
+				this.size.get().getSize(),
+				this.isRead(), 
+				this.date.get(), 
+				this.getMessageRefference());
 	}
 	
 }
