@@ -1,9 +1,13 @@
 package com.barosanu.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeBodyPart;
 
 import com.barosanu.model.table.AbstractTableItem;
 
@@ -17,6 +21,16 @@ public class EmailMessageBean extends AbstractTableItem{
 	private SimpleStringProperty subject;
 	private SimpleStringProperty size;
 	private Message messageReference;
+	
+	//Attachments hanling:
+	private List<MimeBodyPart> attachmentsList = new ArrayList<MimeBodyPart>();
+	private StringBuffer attachmentsNames = new StringBuffer();
+	
+	
+	
+	
+	
+	
 	
 	public EmailMessageBean(String Subject, String Sender, int size,  boolean isRead, Message messageReference){
 		super(isRead);
@@ -67,5 +81,31 @@ public class EmailMessageBean extends AbstractTableItem{
 	public Message getMessageReference() {
 		return messageReference;
 	}
+
+	public List<MimeBodyPart> getAttachmentsList() {
+		return attachmentsList;
+	}
+
+	public String getAttachmentsNames() {
+		return attachmentsNames.toString();
+	}
+	
+	public void addAttachment(MimeBodyPart mbp){
+		attachmentsList.add(mbp);
+		try {
+			attachmentsNames.append(mbp.getFileName() + "; ");
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
+	}
+	public boolean hasAttachments(){
+		return attachmentsList.size() > 0;
+	}
+	//clear methods:
+	public void clearAttachments(){
+		attachmentsList.clear();
+		attachmentsNames.setLength(0);
+	}
+
 
 }

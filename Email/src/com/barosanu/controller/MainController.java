@@ -4,24 +4,24 @@ import java.net.URL;
 import java.util.Comparator;
 import java.util.ResourceBundle;
 
-import javax.swing.SwingUtilities;
-
 import com.barosanu.controller.services.CreateAndRegisterEmailAccountService;
 import com.barosanu.controller.services.FolderUpdaterService;
 import com.barosanu.controller.services.MessageRendererService;
+import com.barosanu.controller.services.SaveAttachmentsService;
 import com.barosanu.model.EmailMessageBean;
 import com.barosanu.model.folder.EmailFolderBean;
 import com.barosanu.model.table.BoldableRowFactory;
 import com.barosanu.view.ViewFactory;
 
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TreeView;
@@ -41,6 +41,14 @@ public class MainController extends AbstractController implements Initializable{
 
 	
     @FXML
+    private Label downAttachLabel;
+    
+    @FXML
+    private ProgressBar downAttachProgress;
+    
+    private SaveAttachmentsService saveAttachmentsService;
+    
+    @FXML
     private TableView<EmailMessageBean> emailTableView;
 	
     @FXML
@@ -56,12 +64,22 @@ public class MainController extends AbstractController implements Initializable{
     private WebView messageRenderer;
 	
     @FXML
-    private Button Button1;
+    private Button Button1,downAttachBtn;
     private MessageRendererService messageRendererService;
 
     @FXML
     void Button1Action(ActionEvent event) {
     	
+    }
+    
+    
+    @FXML
+    void downAttachBtnAction(ActionEvent event) {
+    	EmailMessageBean message = emailTableView.getSelectionModel().getSelectedItem();
+    	if(message != null  && message.hasAttachments()){
+    		saveAttachmentsService.setMessageToDownload(message);
+    		saveAttachmentsService.restart();
+    	}
     }
     
     @FXML
@@ -85,6 +103,9 @@ public class MainController extends AbstractController implements Initializable{
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		downAttachProgress.setVisible(false);
+		downAttachLabel.setVisible(false);
+		saveAttachmentsService = new SaveAttachmentsService(downAttachProgress, downAttachLabel);
 		messageRendererService = new MessageRendererService(messageRenderer.getEngine());
 		
 		
@@ -148,8 +169,7 @@ public class MainController extends AbstractController implements Initializable{
 			if(message != null){
 				getModelAccess().setSelectedMessage(message);
 				messageRendererService.setMessageToRender(message);
-				//messageRendererService.restart();			
-				Platform.runLater(messageRendererService);//on Application thread!!
+				messageRendererService.restart();						
 			}
 		});
 		

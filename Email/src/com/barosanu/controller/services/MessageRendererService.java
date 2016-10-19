@@ -11,7 +11,7 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.scene.web.WebEngine;
 
-public class MessageRendererService extends Service<Void> implements Runnable{
+public class MessageRendererService extends Service<Void>{
 	
 	
 	private EmailMessageBean messageToRender;
@@ -27,7 +27,8 @@ public class MessageRendererService extends Service<Void> implements Runnable{
 	}
 	
 	public void setMessageToRender(EmailMessageBean messageToRender){
-		this.messageToRender = messageToRender;
+		this.messageToRender = messageToRender;		
+		this.setOnSucceeded(e->{showMessage();});		
 	}
 
 
@@ -39,20 +40,16 @@ public class MessageRendererService extends Service<Void> implements Runnable{
 		return new Task<Void>(){
 			@Override
 			protected Void call() throws Exception {
-				renderMessage();
-				
+				renderMessage();				
 				return null;
 			}			
 		};
 	}
 	
-	
-	
-	
-	
 	private void renderMessage(){
 		//clear the sb:
 		sb.setLength(0);
+		messageToRender.clearAttachments();
 		Message message = messageToRender.getMessageReference();
 		try {
 			String messageType = message.getContentType();
@@ -76,9 +73,11 @@ public class MessageRendererService extends Service<Void> implements Runnable{
 							sb.append(bp.getContent().toString());
 						}
 
-						//here the attachments are handled TODO by someone who cares
+						//here the attachments are handled
 					}else if(contentType.toLowerCase().contains("application")){
 						MimeBodyPart mbp = (MimeBodyPart)bp;
+						messageToRender.addAttachment(mbp);
+						
 
 						//Sometimes the text content of the message is encapsulated in another multipart,
 						//so we have to iterate again through it.
@@ -95,7 +94,7 @@ public class MessageRendererService extends Service<Void> implements Runnable{
 				}
 
 			}
-			messageRendererEngine.loadContent(sb.toString());
+			
 		} catch (Exception e) {
 			System.out.println("Exception while vizualizing message: ");
 			e.printStackTrace();
@@ -103,18 +102,13 @@ public class MessageRendererService extends Service<Void> implements Runnable{
 		
 		
 	}
-
-	@Override
-	public void run() {
-		renderMessage();
-		
+	
+	/**
+	 * Only call once the message is loaded!!!
+	 * handle the info about attachments
+	 */
+	private void showMessage(){
+		messageRendererEngine.loadContent(sb.toString());
 	}
-
-
-
-
-
-
-
 
 }
