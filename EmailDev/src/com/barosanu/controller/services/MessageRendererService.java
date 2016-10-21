@@ -15,7 +15,7 @@ public class MessageRendererService extends Service<Void>{
 	
 	private EmailMessageBean messageToRender;
 	private WebEngine messageRendererEngine;
-	StringBuffer sb = new StringBuffer();
+	private StringBuffer sb = new StringBuffer();
 
 	public MessageRendererService(WebEngine messageRendererEngine) {
 		this.messageRendererEngine = messageRendererEngine;
@@ -24,6 +24,10 @@ public class MessageRendererService extends Service<Void>{
 	
 	public void setMessageToRender(EmailMessageBean messageToRender){
 		this.messageToRender = messageToRender;
+	}
+	
+	public String getContent(){
+		return sb.toString();
 	}
 
 	@Override

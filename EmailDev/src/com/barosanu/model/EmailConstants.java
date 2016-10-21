@@ -7,5 +7,11 @@ public class EmailConstants {
 	public static final int LOGIN_STATE_FAILED_BY_CREDENTIALS = 2;
 	public static final int LOGIN_STATE_SUCCEDED = 3;
 	
+	//reply or forvard indicator:
+	public static final int REPLY_MESSAGE = 4;
+	public static final int FORWARD_MESSAGE = 5;
+	public static final int STANDALONE_MESSAGE = 6;
+	
+	
 
 }

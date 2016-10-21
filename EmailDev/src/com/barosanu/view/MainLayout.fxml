@@ -25,7 +25,8 @@
          </columns></TableView>
       <WebView fx:id="messageRenderer" layoutX="232.0" layoutY="275.0" prefHeight="416.0" prefWidth="902.0" AnchorPane.bottomAnchor="11.0" AnchorPane.leftAnchor="232.0" AnchorPane.rightAnchor="6.0" AnchorPane.topAnchor="275.0" />
       <Label fx:id="attachementsLabel" layoutX="387.0" layoutY="25.0" prefHeight="17.0" prefWidth="575.0" text="Label" />
-      <ProgressIndicator fx:id="attachProgress" layoutX="-1.0" layoutY="4.0"  progress="0.0"  />
-      <Label fx:id="downAttachLabel" layoutX="42.0" layoutY="25.0" text="Downloading attachments..." />
+      <ProgressIndicator fx:id="attachProgress" layoutX="954.0" layoutY="14.0" progress="0.0" />
+      <Label fx:id="downAttachLabel" layoutX="1025.0" layoutY="17.0" text="Downloading attachments..." />
+      <Button layoutX="14.0" layoutY="21.0" mnemonicParsing="false" onAction="#composeBtnAction" text="Compose" />
    </children>
 </AnchorPane>

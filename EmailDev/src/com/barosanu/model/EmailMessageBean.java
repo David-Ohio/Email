@@ -24,6 +24,12 @@ public class EmailMessageBean extends AbstractTableItem{
 	private Message messageRefference;
 	private List<MimeBodyPart> listOfAttachments = new ArrayList<MimeBodyPart>();
 	private StringBuffer attachmentsNames = new StringBuffer();
+	
+	/**
+	 * only use when forvarding or repling to a message!
+	 * memory consuming!!
+	 */
+	private String contentForForvarding;
 
 	public EmailMessageBean(String Subject, String Sender, String Recipient, int size, boolean isRead, Date date, Message MessageRefference){
 		super(isRead);
@@ -92,6 +98,14 @@ public class EmailMessageBean extends AbstractTableItem{
 			}
 		}
 		return attachmentsNames.toString();
+	}
+
+	public String getContentForForvarding() {
+		return contentForForvarding;
+	}
+
+	public void setContentForForvarding(String contentForForvarding) {
+		this.contentForForvarding = contentForForvarding;
 	}
 	
 }

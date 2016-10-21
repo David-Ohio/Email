@@ -10,6 +10,7 @@ import com.barosanu.controller.services.CreateAndRegisterEmailAccountService;
 import com.barosanu.controller.services.FolderUpdaterService;
 import com.barosanu.controller.services.MessageRendererService;
 import com.barosanu.controller.services.SaveAttachmentsService;
+import com.barosanu.model.EmailConstants;
 import com.barosanu.model.EmailMessageBean;
 import com.barosanu.model.folder.EmailFolderBean;
 import com.barosanu.model.table.BoldableRowFactory;
@@ -17,6 +18,7 @@ import com.barosanu.model.table.FormatableInteger;
 import com.barosanu.view.ViewFactory;
 
 import DONOTCOMMIT.DONOTCOMMIT;
+import javafx.concurrent.Worker.State;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
@@ -43,6 +45,7 @@ public class MainController extends AbstractController implements Initializable{
     private MenuItem showDetails = new MenuItem("show details");
     private MenuItem markUnread = new MenuItem("mark as unread");
     private MenuItem deleteMessage = new MenuItem("delete message");
+    private MenuItem reply = new MenuItem("reply ");
 
     @FXML
     private Label downAttachLabel;
@@ -68,6 +71,14 @@ public class MainController extends AbstractController implements Initializable{
     private WebView messageRenderer;	
     @FXML
     private Button downloadAttachBtn;
+    @FXML
+    void composeBtnAction() {
+    	Scene scene = ViewFactory.defaultFactory.getComposeEmailScene();
+    	Stage stage = new Stage();
+    	stage.setScene(scene);
+    	stage.show();
+
+    }
     @FXML
     void downloadAttachBtnAction() {
     	saveAttachmentsService.setEmailMessage(getModelAccess().getSelectedMessage());
@@ -125,7 +136,7 @@ public class MainController extends AbstractController implements Initializable{
 				getModelAccess());
 		createAndRegisterEmailAccountService3.restart();
 		
-		emailTableView.setContextMenu(new ContextMenu(showDetails, markUnread, deleteMessage));
+		emailTableView.setContextMenu(new ContextMenu(showDetails, markUnread, deleteMessage, reply));
 		
 		emailFoldersTreeView.setOnMouseClicked(e ->{
 			EmailFolderBean<String> item = (EmailFolderBean<String>)emailFoldersTreeView.getSelectionModel().getSelectedItem();
@@ -185,6 +196,16 @@ public class MainController extends AbstractController implements Initializable{
 				return;
 			}
 			getModelAccess().getSelectedFolder().getData().remove(message);
+		});
+		reply.setOnAction(e->{
+			if (messageRendererService.getState() != State.RUNNING) {
+				EmailMessageBean message = emailTableView.getSelectionModel().getSelectedItem();
+				message.setContentForForvarding(messageRendererService.getContent());
+				Scene scene = ViewFactory.defaultFactory.getComposeEmailScene(message, EmailConstants.REPLY_MESSAGE);
+				Stage stage = new Stage();
+				stage.setScene(scene);
+				stage.show();
+			}
 		});
 		
 		

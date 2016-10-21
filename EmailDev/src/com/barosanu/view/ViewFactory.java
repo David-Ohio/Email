@@ -3,9 +3,11 @@ package com.barosanu.view;
 import javax.naming.OperationNotSupportedException;
 
 import com.barosanu.controller.AbstractController;
+import com.barosanu.controller.ComposeEmailController;
 import com.barosanu.controller.EmailDetailsController;
 import com.barosanu.controller.MainController;
 import com.barosanu.controller.ModelAccess;
+import com.barosanu.model.EmailMessageBean;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -22,6 +24,7 @@ public class ViewFactory {
 	private final String DEFAULT_CSS = "style.css";
 	private final String EMAIL_DETAILS_FXML = "EmailDetailsLayout.fxml";
 	private final String MAIN_SCREEN_FXML = "MainLayout.fxml";
+	private final String COMPOSE_EMAIL_FXML = "ComposeEmailLayout.fxml";
 	
 	private ModelAccess modelAccess = new ModelAccess();
 	
@@ -44,6 +47,30 @@ public class ViewFactory {
 		emailDetailsController = new EmailDetailsController(modelAccess);
 		return initializeScene(EMAIL_DETAILS_FXML, emailDetailsController);		
 	}
+	
+	public Scene getComposeEmailScene(){
+		AbstractController composeEmailController = new ComposeEmailController(modelAccess);
+		return initializeScene(COMPOSE_EMAIL_FXML, composeEmailController);
+	}
+	/**
+	 * 
+	 * @param Subject
+	 * @param recipient
+	 * @param initialContent
+	 * @param type  {@link EmailConstants}
+	 * @return
+	 */
+	public Scene getComposeEmailScene(EmailMessageBean initialMessage, int type){
+		AbstractController composeEmailController;
+		try {
+			composeEmailController = new ComposeEmailController(modelAccess, initialMessage, type);
+		} catch (Exception e) {
+			composeEmailController = new ComposeEmailController(modelAccess);
+			e.printStackTrace();
+		}
+		return initializeScene(COMPOSE_EMAIL_FXML, composeEmailController);
+	}
+	
 	
 	
 	

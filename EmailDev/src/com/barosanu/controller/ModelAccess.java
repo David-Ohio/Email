@@ -8,10 +8,19 @@ import javax.mail.Folder;
 import com.barosanu.model.EmailMessageBean;
 import com.barosanu.model.folder.EmailFolderBean;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 public class ModelAccess {
 	
 	
 	private EmailMessageBean selectedMessage;
+	private EmailFolderBean<String> selectedFolder;
+	
+	//needed for updater service
+	private List<Folder> folderList = new ArrayList<Folder>();
+	private ObservableList<String> emailAccountsList = FXCollections.observableArrayList();
+	
 
 	public EmailMessageBean getSelectedMessage() {
 		return selectedMessage;
@@ -33,13 +42,18 @@ public class ModelAccess {
 		return folderList;
 	}
 
-	private EmailFolderBean<String> selectedFolder;
-	
-	//needed for updater service
-	private List<Folder> folderList = new ArrayList<Folder>();
 	
 	public void addFolder(Folder folder){
 		folderList.add(folder);
 	}
+	
+	public void addEmailAccount(String emailAccount){
+		emailAccountsList.add(emailAccount);
+	}
+
+	public ObservableList<String> getEmailAccountsList() {
+		return emailAccountsList;
+	}
+
 
 }

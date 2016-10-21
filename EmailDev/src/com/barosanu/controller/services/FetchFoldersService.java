@@ -37,8 +37,8 @@ public class FetchFoldersService extends Service<Void>{
 			protected Void call() throws Exception {
 				NUMBER_OF_FETCHFOLDERSERVICES_ACTIVE++;
 				if(emailAccountBean != null){
+					modelAccess.addEmailAccount(emailAccountBean.getEmailAdress());
 					Folder[] folders = emailAccountBean.getStore().getDefaultFolder().list();
-					System.out.println(folders);
 					for(Folder folder: folders){
 						EmailFolderBean<String> item = new EmailFolderBean<String>(folder.getName(), folder.getFullName());
 						foldersRoot.getChildren().add(item);
