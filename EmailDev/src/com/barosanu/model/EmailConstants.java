@@ -12,6 +12,8 @@ public class EmailConstants {
 	public static final int FORWARD_MESSAGE = 5;
 	public static final int STANDALONE_MESSAGE = 6;
 	
-	
+	//Sending result:
+	public static final int MESSAGE_SENT_OK = 7;
+	public static final int MESSAGE_SENT_ERROR = 8;
 
 }

@@ -1,8 +1,13 @@
 package com.barosanu.controller;
 
+import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
+import com.barosanu.controller.services.EmailSenderService;
+import com.barosanu.model.EmailAccountBean;
 import com.barosanu.model.EmailConstants;
 import com.barosanu.model.EmailMessageBean;
 
@@ -12,11 +17,13 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.web.HTMLEditor;
+import javafx.stage.FileChooser;
 
 public class ComposeEmailController extends AbstractController implements Initializable {
 
 	private int type = EmailConstants.STANDALONE_MESSAGE;
 	private EmailMessageBean initialMessage;
+    private List<File> attachments = new ArrayList<File>();
 
 	public ComposeEmailController(ModelAccess modelAccess) {
 		super(modelAccess);
@@ -63,11 +70,32 @@ public class ComposeEmailController extends AbstractController implements Initia
 
 	@FXML
 	void AttachBtnAction() {
+    	FileChooser fileChooser = new FileChooser();
+    	File selectedFile = fileChooser.showOpenDialog(null);
+    	if(selectedFile != null){
+    		attachments.add(selectedFile);
+    			attachNamesLabel.setText(attachNamesLabel.getText() + selectedFile.getName()+ "; ");    		
+    	}
 
 	}
 
 	@FXML
 	void SendBtnAction() {
+		errorLabel.setText("");
+		EmailSenderService emailSenderService = 
+				new EmailSenderService(EmailAccountBean.accounts.get(SenderChoice.getValue()),
+						SubjectField.getText(),
+						RecipientField.getText(),
+						CcField.getText(), 
+						ComposeArea.getHtmlText(),
+						attachments);
+		emailSenderService.restart();
+		emailSenderService.setOnSucceeded(e->{
+			if(emailSenderService.getValue() != EmailConstants.MESSAGE_SENT_OK){
+				errorLabel.setText("Error while sending message");
+			}
+		});
+		
 
 	}
 
@@ -92,7 +120,7 @@ public class ComposeEmailController extends AbstractController implements Initia
 			default:
 				break;
 			}
-			ComposeArea.setHtmlText("<br>From " + initialMessage.getSender() 
+			ComposeArea.setHtmlText("<br><br><br><br><br>From " + initialMessage.getSender() 
 					+ "<br>Sent: " + initialMessage.getDate()
 					+ "<br>To: " + initialMessage.getRecipient() 
 					+ "<br>Subject: " + initialMessage.getSubject()
@@ -100,5 +128,11 @@ public class ComposeEmailController extends AbstractController implements Initia
 		}
 
 	}
+	
+//	private String validateEmailAddress(String address){
+//		
+//	}
+	
+	
 
 }

@@ -1,5 +1,7 @@
 package com.barosanu.model;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.mail.AuthenticationFailedException;
@@ -16,6 +18,8 @@ public class EmailAccountBean {
 	private Store store;
 	private Session session;
 	private int loginState = EmailConstants.LOGIN_STATE_NOT_READY;
+	
+	public static Map<String, EmailAccountBean> accounts = new HashMap<String, EmailAccountBean>();
 	
 	public String getEmailAdress() {
 		return emailAdress;
@@ -62,6 +66,7 @@ public class EmailAccountBean {
 			store.connect(properties.getProperty("incomingHost"), emailAdress, password);
 			System.out.println("EmailAccount constructed successfully: " + this);
 			loginState = EmailConstants.LOGIN_STATE_SUCCEDED;
+			accounts.put(emailAdress, this);
 		}catch(AuthenticationFailedException ae){
 			ae.printStackTrace();
 			loginState = EmailConstants.LOGIN_STATE_FAILED_BY_CREDENTIALS;
