@@ -11,9 +11,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="586.0" prefWidth="985.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Button fx:id="Button1" layoutX="53.0" layoutY="21.0" mnemonicParsing="false" onAction="#Button1Action" text="Button1" />
-      <Button layoutX="122.0" layoutY="21.0" mnemonicParsing="false" text="Button" />
-      <Button layoutX="190.0" layoutY="21.0" mnemonicParsing="false" onAction="#changeReadAction" text="Change readProperty" />
+      <Button fx:id="Button1" layoutX="53.0" layoutY="21.0" mnemonicParsing="false" onAction="#Button1Action" text="Compose" />
       <TreeView fx:id="emailFoldersTreeView" layoutX="14.0" layoutY="60.0" prefHeight="514.0" prefWidth="201.0" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="60.0" />
       <TableView fx:id="emailTableView" layoutX="216.0" layoutY="60.0" prefHeight="215.0" prefWidth="764.0" AnchorPane.leftAnchor="216.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="60.0">
          <columns>

@@ -69,7 +69,10 @@ public class MainController extends AbstractController implements Initializable{
 
     @FXML
     void Button1Action(ActionEvent event) {
-    	
+		Scene scene = ViewFactory.defaultFactory.getComposeMessageScene();
+		Stage stage = new Stage();
+		stage.setScene(scene);
+		stage.show();
     }
     
     
@@ -82,31 +85,14 @@ public class MainController extends AbstractController implements Initializable{
     	}
     }
     
-    @FXML
-    void changeReadAction() {
-    	EmailMessageBean message = getModelAccess().getSelectedMessage();
-    	if(message != null){
-    		boolean value = message.isRead();
-    		message.setRead(!value);
-    		EmailFolderBean<String> selectedFolder = getModelAccess().getSelectedFolder();
-    		if(selectedFolder != null){
-    			if(value){
-    				selectedFolder.incrementUnreadMessagesCount(1);
-    			}else{
-    				selectedFolder.decrementUnreadMessagesCount();
-    			}
-    		}
-    	}
-    }
-    
-    
-
-	@Override
+  	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		downAttachProgress.setVisible(false);
+
 		downAttachLabel.setVisible(false);
 		saveAttachmentsService = new SaveAttachmentsService(downAttachProgress, downAttachLabel);
 		messageRendererService = new MessageRendererService(messageRenderer.getEngine());
+		downAttachProgress.progressProperty().bind(saveAttachmentsService.progressProperty());
 		
 		
 		

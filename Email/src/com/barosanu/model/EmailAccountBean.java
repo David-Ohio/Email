@@ -74,6 +74,10 @@ public class EmailAccountBean {
 		}
 		
 	}
+
+	public String getPassword() {
+		return password;
+	}
 	
 	
 	

@@ -39,10 +39,11 @@ public class SaveAttachmentsService extends Service<Void>{
 			protected Void call() throws Exception {				
 				try {
 					for(MimeBodyPart mbp: messageToDownload.getAttachmentsList()){
+						updateProgress(messageToDownload.getAttachmentsList().indexOf(mbp),
+								messageToDownload.getAttachmentsList().size());
 						mbp.saveFile(LOCATION_OF_DOWNLOADS + mbp.getFileName());
 					}
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				return null;

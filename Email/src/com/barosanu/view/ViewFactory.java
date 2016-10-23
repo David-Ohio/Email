@@ -3,6 +3,7 @@ package com.barosanu.view;
 import javax.naming.OperationNotSupportedException;
 
 import com.barosanu.controller.AbstractController;
+import com.barosanu.controller.ComposeMessageController;
 import com.barosanu.controller.EmailDetailsController;
 import com.barosanu.controller.MainController;
 import com.barosanu.controller.ModelAccess;
@@ -22,6 +23,7 @@ public class ViewFactory {
 	private final String DEFAULT_CSS = "style.css";
 	private final String EMAIL_DETAILS_FXML = "EmailDetailsLayout.fxml";
 	private final String MAIN_SCREEN_FXML = "MainLayout.fxml";
+	private final String COMPOSE_SCREEN_FXML = "composeMessageLayout.fxml";
 	
 	private ModelAccess modelAccess = new ModelAccess();
 	
@@ -44,6 +46,13 @@ public class ViewFactory {
 		emailDetailsController = new EmailDetailsController(modelAccess);
 		return initializeScene(EMAIL_DETAILS_FXML, emailDetailsController);		
 	}
+	
+	public Scene getComposeMessageScene(){
+		AbstractController composeController = new ComposeMessageController(modelAccess);
+		return initializeScene(COMPOSE_SCREEN_FXML, composeController);
+	}
+	
+	
 	
 	
 	

@@ -1,16 +1,38 @@
 package com.barosanu.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.mail.Folder;
 
+import com.barosanu.model.EmailAccountBean;
 import com.barosanu.model.EmailMessageBean;
 import com.barosanu.model.folder.EmailFolderBean;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 public class ModelAccess {
 	
 	
+	private Map<String, EmailAccountBean> emailAccounts = new HashMap<String, EmailAccountBean>();
+	private ObservableList<String> emailAccountsNames = FXCollections.observableArrayList();
+	
+	public ObservableList<String> getEmailAccountNames(){
+		return emailAccountsNames;
+	}
+	
+	public EmailAccountBean getEmailAccountByName(String name){
+		return emailAccounts.get(name);
+	}
+	
+	public void addAccount(EmailAccountBean account){
+		emailAccounts.put(account.getEmailAdress(), account);
+		emailAccountsNames.add(account.getEmailAdress());
+	}
+		
 	private EmailMessageBean selectedMessage;
 
 	public EmailMessageBean getSelectedMessage() {

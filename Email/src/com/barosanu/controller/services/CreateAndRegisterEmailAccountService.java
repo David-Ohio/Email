@@ -32,6 +32,7 @@ public class CreateAndRegisterEmailAccountService extends Service<Integer>{
 			protected Integer call() throws Exception {
 				EmailAccountBean emailAccount = new EmailAccountBean(emailAddress, password);
 				if(emailAccount.getLoginState() == EmailConstants.LOGIN_STATE_SUCCEDED){
+					modelAccess.addAccount(emailAccount);
 					EmailFolderBean<String> emailFolderBean = new EmailFolderBean<String>(emailAddress);
 					folderRoot.getChildren().add(emailFolderBean);
 					FetchFoldersService fetchFoldersService = new FetchFoldersService(emailFolderBean, emailAccount, modelAccess);
