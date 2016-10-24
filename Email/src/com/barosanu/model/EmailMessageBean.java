@@ -26,12 +26,6 @@ public class EmailMessageBean extends AbstractTableItem{
 	private List<MimeBodyPart> attachmentsList = new ArrayList<MimeBodyPart>();
 	private StringBuffer attachmentsNames = new StringBuffer();
 	
-	
-	
-	
-	
-	
-	
 	public EmailMessageBean(String Subject, String Sender, int size,  boolean isRead, Message messageReference){
 		super(isRead);
 		this.subject = new SimpleStringProperty(Subject);
