@@ -3,14 +3,9 @@ package com.barosanu.model;
 import java.util.Properties;
 
 import javax.mail.Authenticator;
-import javax.mail.Flags.Flag;
-import javax.mail.Folder;
-import javax.mail.Message;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Store;
-
-import javafx.collections.ObservableList;
 
 public class EmailAccountBean {
 	

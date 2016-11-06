@@ -1,37 +1,38 @@
 package com.barosanu.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeBodyPart;
 
 import com.barosanu.model.table.AbstractTableItem;
+import com.barosanu.model.table.FormatableInteger;
 
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 public class EmailMessageBean extends AbstractTableItem{
-	
-	public static Map<String, Integer> formattedValues = new HashMap<String, Integer>();
-	
+		
 	private SimpleStringProperty sender;
 	private SimpleStringProperty subject;
-	private SimpleStringProperty size;
+	private SimpleObjectProperty<FormatableInteger> size;
 	private Message messageReference;
+	private SimpleObjectProperty<Date> date;
 	
 	//Attachments hanling:
 	private List<MimeBodyPart> attachmentsList = new ArrayList<MimeBodyPart>();
 	private StringBuffer attachmentsNames = new StringBuffer();
 	
-	public EmailMessageBean(String Subject, String Sender, int size,  boolean isRead, Message messageReference){
+	public EmailMessageBean(String Subject, String Sender, int size,  boolean isRead, Date date,Message messageReference){
 		super(isRead);
 		this.subject = new SimpleStringProperty(Subject);
 		this.sender = new SimpleStringProperty(Sender);
-		this.size = new SimpleStringProperty(formatSize(size));
+		this.size = new SimpleObjectProperty<FormatableInteger>(new FormatableInteger(size));
 		this.messageReference = messageReference;
+		this.date = new SimpleObjectProperty<Date>(date);
 
 	}
 	
@@ -49,28 +50,13 @@ public class EmailMessageBean extends AbstractTableItem{
 	public String getSubject(){
 		return subject.get();
 	}
-	public String getSize(){
+	public FormatableInteger getSize(){
 		return size.get();
 	}
-
-	
-	private String formatSize(int size){
-		String returnValue;
-		if(size<= 0){
-			returnValue =  "0";}
-		
-		else if(size<1024){
-			returnValue = size + " B";
-		}
-		else if(size < 1048576){
-			returnValue = size/1024 + " kB";
-		}else{
-			returnValue = size/1048576 + " MB";
-		}
-		formattedValues.put(returnValue, size);
-		return returnValue;
-		
+	public Date getDate(){
+		return date.get();
 	}
+
 
 	public Message getMessageReference() {
 		return messageReference;
