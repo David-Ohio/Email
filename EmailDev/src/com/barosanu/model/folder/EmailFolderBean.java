@@ -10,6 +10,7 @@ import com.barosanu.view.ViewFactory;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
 
 public class EmailFolderBean<T> extends TreeItem<String>{
@@ -27,6 +28,19 @@ public class EmailFolderBean<T> extends TreeItem<String>{
 	 */
 	public EmailFolderBean(String value){
 		super(value, ViewFactory.defaultFactory.resolveIcon(value));
+		this.name = value;
+		this.completeName = value;
+		data = null;
+		topElement = true;
+		this.setExpanded(true);
+	}
+	
+	/**
+	 * Constructor for the root element element
+	 * @param value
+	 */
+	public EmailFolderBean(String value, Node graphic){
+		super(value, graphic);
 		this.name = value;
 		this.completeName = value;
 		data = null;

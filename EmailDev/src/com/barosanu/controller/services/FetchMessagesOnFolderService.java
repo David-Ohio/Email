@@ -12,7 +12,7 @@ public class FetchMessagesOnFolderService extends Service<Void>{
 	
 	private EmailFolderBean<String> emailFolder;
 	private Folder folder;
-	public final int MAX_FOLDER_SIZE = 20;
+	public final int MAX_FOLDER_SIZE = 2000;
 	
 	
 	public FetchMessagesOnFolderService(EmailFolderBean<String> emailFolder, Folder folder) {
@@ -30,7 +30,7 @@ public class FetchMessagesOnFolderService extends Service<Void>{
 					folder.open(Folder.READ_WRITE);
 				}
 				int folderSize = folder.getMessageCount();
-				for(int i = folderSize; i > folderSize - MAX_FOLDER_SIZE && i > 0 ; i--){
+				for(int i = folderSize; i > 0 ; i--){
 					Message currentMessage = folder.getMessage(i);
 					emailFolder.addEmail(currentMessage);
 					}				

@@ -84,8 +84,15 @@ public class MainController extends AbstractController implements Initializable{
     	saveAttachmentsService.setEmailMessage(getModelAccess().getSelectedMessage());
     	if(getModelAccess().getSelectedMessage().getListOfAttachments().size() > 0 ){
     		saveAttachmentsService.restart();
-    	}
-    	
+    	}    	
+    }
+    
+    @FXML
+    void addAccountBtnAction(){
+    	Scene scene = ViewFactory.defaultFactory.getAddAccountScene();
+    	Stage stage = new Stage();
+    	stage.setScene(scene);
+    	stage.show();
     }
     private MessageRendererService messageRendererService;
     private FolderUpdaterService folderUpdaterService;
@@ -101,7 +108,6 @@ public class MainController extends AbstractController implements Initializable{
 		messageRendererService = new MessageRendererService(messageRenderer.getEngine());
 		
 		emailTableView.setRowFactory(e-> new BoldableRowFactory<>());
-		ViewFactory viewfactory = ViewFactory.defaultFactory;
 		subjectCol.setCellValueFactory(new PropertyValueFactory<EmailMessageBean, String>("subject"));
 		senderCol.setCellValueFactory(new PropertyValueFactory<EmailMessageBean, String>("sender"));
 		recipientCol.setCellValueFactory(new PropertyValueFactory<EmailMessageBean, String>("recipient"));
@@ -111,30 +117,27 @@ public class MainController extends AbstractController implements Initializable{
 		//BUG: sizeCol doesn't get it's default comparator overridden, have to do this manually!!!
 		sizeCol.setComparator(new FormatableInteger(0));	
 		
-		EmailFolderBean<String> root = new EmailFolderBean<String>("");
-		emailFoldersTreeView.setRoot(root);		
+
+		emailFoldersTreeView.setRoot(getModelAccess().getRoot());		
 		emailFoldersTreeView.setShowRoot(false);
 		
 		CreateAndRegisterEmailAccountService createAndRegisterEmailAccountService1 = 
 				new CreateAndRegisterEmailAccountService(DONOTCOMMIT.address1, 
 				DONOTCOMMIT.password1,
-				root,
 				getModelAccess());
 		createAndRegisterEmailAccountService1.restart();
 
 		CreateAndRegisterEmailAccountService createAndRegisterEmailAccountService2 = 
 				new CreateAndRegisterEmailAccountService(DONOTCOMMIT.address2, 
 				DONOTCOMMIT.password2,
-				root,
 				getModelAccess());
 		createAndRegisterEmailAccountService2.restart();
 		
-		CreateAndRegisterEmailAccountService createAndRegisterEmailAccountService3 = 
-				new CreateAndRegisterEmailAccountService(DONOTCOMMIT.address3, 
-				DONOTCOMMIT.password3,
-				root,
-				getModelAccess());
-		createAndRegisterEmailAccountService3.restart();
+//		CreateAndRegisterEmailAccountService createAndRegisterEmailAccountService3 = 
+//				new CreateAndRegisterEmailAccountService(DONOTCOMMIT.address3, 
+//				DONOTCOMMIT.password3,
+//				getModelAccess());
+//		createAndRegisterEmailAccountService3.restart();
 		
 		emailTableView.setContextMenu(new ContextMenu(showDetails, markUnread, deleteMessage, reply));
 		
@@ -172,7 +175,7 @@ public class MainController extends AbstractController implements Initializable{
 			}
 		});
 		showDetails.setOnAction(e->{			
-			Scene scene = viewfactory.getEmailDetailsScene();
+			Scene scene = ViewFactory.defaultFactory.getEmailDetailsScene();
 			Stage stage = new Stage();
 			stage.setScene(scene);
 			stage.show();

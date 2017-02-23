@@ -22,19 +22,16 @@ import com.barosanu.model.EmailConstants;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
-public class EmailSenderService extends Service<Integer>{
-	
+public class EmailSenderService extends Service<Integer> {
+
 	private int result;
-	
+
 	private EmailAccountBean emailAccountBean;
 	private String subject;
 	private String recipient;
 	private String cc;
 	private String content;
 	private List<File> attachments = new ArrayList<File>();
-	
-
-
 
 	public EmailSenderService(EmailAccountBean emailAccountBean, String subject, String recipient, String cc,
 			String content, List<File> attachments) {
@@ -46,61 +43,57 @@ public class EmailSenderService extends Service<Integer>{
 		this.attachments = attachments;
 	}
 
-
-
 	@Override
 	protected Task<Integer> createTask() {
-		return new Task<Integer>(){
+		return new Task<Integer>() {
 			@Override
 			protected Integer call() throws Exception {
 				try {
-					//SetUp:
+					// SetUp:
 					Session session = emailAccountBean.getSession();
 					MimeMessage message = new MimeMessage(session);
 					message.setFrom(emailAccountBean.getEmailAdress());
 					message.addRecipients(Message.RecipientType.TO, recipient);
-					if(cc != null){
+					if (cc != null) {
 						message.addRecipients(Message.RecipientType.CC, cc);
 					}
 					message.setSubject(subject);
-					
-					//Setting the content:
-		    		Multipart multipart = new MimeMultipart();
-		    		BodyPart messageBodyPart = new MimeBodyPart();
-		    		messageBodyPart.setContent(content, "text/html");
-		    		multipart.addBodyPart(messageBodyPart);
-		    		
-		    		//adding attachments:
-					if(attachments.size() >0){
-						for(File file: attachments){
-		    				MimeBodyPart messageBodyPartAttach = new MimeBodyPart();
-		    				DataSource source = new FileDataSource(file.getAbsolutePath());
-		    				messageBodyPartAttach.setDataHandler(new DataHandler(source));
-		    				messageBodyPartAttach.setFileName(file.getName());
-		    				multipart.addBodyPart(messageBodyPartAttach);
+
+					// Setting the content:
+					Multipart multipart = new MimeMultipart();
+					BodyPart messageBodyPart = new MimeBodyPart();
+					messageBodyPart.setContent(content, "text/html");
+					multipart.addBodyPart(messageBodyPart);
+
+					// adding attachments:
+					if (attachments.size() > 0) {
+						for (File file : attachments) {
+							MimeBodyPart messageBodyPartAttach = new MimeBodyPart();
+							DataSource source = new FileDataSource(file.getAbsolutePath());
+							messageBodyPartAttach.setDataHandler(new DataHandler(source));
+							messageBodyPartAttach.setFileName(file.getName());
+							multipart.addBodyPart(messageBodyPartAttach);
 						}
 					}
 					message.setContent(multipart);
-					
-					//Sending the message:
-		    		Transport transport = session.getTransport();
-		            transport.connect(emailAccountBean.getProperties().getProperty("outgoingHost"),
-		            			//	465,
-		            				emailAccountBean.getEmailAdress(), 
-		            				emailAccountBean.getPassword()); // account used
-		            transport.sendMessage(message, message.getAllRecipients());
-		            transport.close();
+
+					// Sending the message:
+					Transport transport = session.getTransport();
+					transport.connect(emailAccountBean.getProperties().getProperty("outgoingHost"),
+							// 465,
+							emailAccountBean.getEmailAdress(), emailAccountBean.getPassword()); // account
+																								// used
+					transport.sendMessage(message, message.getAllRecipients());
+					transport.close();
 					result = EmailConstants.MESSAGE_SENT_OK;
-					
-					
+
 				} catch (Exception e) {
 					result = EmailConstants.MESSAGE_SENT_ERROR;
 					e.printStackTrace();
 				}
 				return result;
-			}			
+			}
 		};
 	}
-
 
 }

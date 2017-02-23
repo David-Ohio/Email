@@ -12,14 +12,12 @@ public class CreateAndRegisterEmailAccountService extends Service<Integer>{
 	
 	private String emailAddress;
 	private String password;
-	private EmailFolderBean<String> folderRoot;
 	private ModelAccess modelAccess;
 
 	public CreateAndRegisterEmailAccountService(String emailAddress, String password,
-			EmailFolderBean<String> folderRoot, ModelAccess modelAccess) {
+			 ModelAccess modelAccess) {
 		this.emailAddress = emailAddress;
 		this.password = password;
-		this.folderRoot = folderRoot;
 		this.modelAccess = modelAccess;
 	}
 
@@ -30,9 +28,10 @@ public class CreateAndRegisterEmailAccountService extends Service<Integer>{
 			protected Integer call() throws Exception {
 					EmailAccountBean emailAccount = new EmailAccountBean(emailAddress, password );
 					if (emailAccount.getLoginState() == EmailConstants.LOGIN_STATE_SUCCEDED) {
+						modelAccess.addAccount(emailAccount);
 						EmailFolderBean<String> emailFolderBean = new EmailFolderBean<String>(
 								emailAccount.getEmailAdress());
-						folderRoot.getChildren().add(emailFolderBean);
+						modelAccess.getRoot().getChildren().add(emailFolderBean);
 						FetchFoldersService fetchFoldersService = new FetchFoldersService(emailFolderBean,
 								emailAccount, modelAccess);
 						fetchFoldersService.restart();

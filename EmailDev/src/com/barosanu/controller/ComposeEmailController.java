@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import com.barosanu.controller.services.EmailSenderService;
-import com.barosanu.model.EmailAccountBean;
 import com.barosanu.model.EmailConstants;
 import com.barosanu.model.EmailMessageBean;
 
@@ -83,7 +82,7 @@ public class ComposeEmailController extends AbstractController implements Initia
 	void SendBtnAction() {
 		errorLabel.setText("");
 		EmailSenderService emailSenderService = 
-				new EmailSenderService(EmailAccountBean.accounts.get(SenderChoice.getValue()),
+				new EmailSenderService(getModelAccess().getEmailAccountByName(SenderChoice.getValue()),
 						SubjectField.getText(),
 						RecipientField.getText(),
 						CcField.getText(), 
@@ -102,8 +101,8 @@ public class ComposeEmailController extends AbstractController implements Initia
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		fillInitialDetails();
-		SenderChoice.setItems(getModelAccess().getEmailAccountsList());
-		SenderChoice.setValue(getModelAccess().getEmailAccountsList().get(0));
+		SenderChoice.setItems(getModelAccess().getEmailAccountNames());
+		SenderChoice.setValue(getModelAccess().getEmailAccountNames().get(0));
 
 	}
 
