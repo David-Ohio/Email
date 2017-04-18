@@ -4,9 +4,11 @@ import java.util.Properties;
 
 import javax.mail.AuthenticationFailedException;
 import javax.mail.Authenticator;
+import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Store;
+import javax.mail.Transport;
 
 public class EmailAccountBean {
 	
@@ -19,9 +21,6 @@ public class EmailAccountBean {
 	
 	public String getEmailAdress() {
 		return emailAdress;
-	}
-	public String getPassword() {
-		return password;
 	}
 	public Properties getProperties(){
 		return properties;
@@ -70,6 +69,15 @@ public class EmailAccountBean {
 			loginState = EmailConstants.LOGIN_STATE_FAILED_BY_NETWORK;
 		}
 		
+	}
+	
+	public Transport transportConnect() throws MessagingException{
+		Transport transport = session.getTransport();
+		transport.connect(getProperties().getProperty("outgoingHost"),
+				// 465,
+				getEmailAdress(), password); // account
+		return transport;
+																					
 	}
 	
 	

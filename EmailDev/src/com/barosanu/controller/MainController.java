@@ -133,11 +133,11 @@ public class MainController extends AbstractController implements Initializable{
 				getModelAccess());
 		createAndRegisterEmailAccountService2.restart();
 		
-//		CreateAndRegisterEmailAccountService createAndRegisterEmailAccountService3 = 
-//				new CreateAndRegisterEmailAccountService(DONOTCOMMIT.address3, 
-//				DONOTCOMMIT.password3,
-//				getModelAccess());
-//		createAndRegisterEmailAccountService3.restart();
+		CreateAndRegisterEmailAccountService createAndRegisterEmailAccountService3 = 
+				new CreateAndRegisterEmailAccountService(DONOTCOMMIT.address3, 
+				DONOTCOMMIT.password3,
+				getModelAccess());
+		createAndRegisterEmailAccountService3.restart();
 		
 		emailTableView.setContextMenu(new ContextMenu(showDetails, markUnread, deleteMessage, reply));
 		

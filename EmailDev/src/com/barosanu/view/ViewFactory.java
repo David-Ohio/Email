@@ -106,6 +106,7 @@ public class ViewFactory {
 			loader.setController(controller);
 			parent = loader.load();
 		} catch (Exception e) {
+			e.printStackTrace();
 			return null;
 		}
 
