@@ -3,8 +3,11 @@ package com.barosanu.controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javax.naming.OperationNotSupportedException;
+
 import com.barosanu.controller.services.CreateAndRegisterEmailAccountService;
 import com.barosanu.model.EmailConstants;
+import com.barosanu.view.ViewFactory;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -28,6 +31,7 @@ public class AddAccountController extends AbstractController implements Initiali
     
     @FXML
     void loginBtnAction() {
+
     	//TODO add validation
     	//TODO add props handling
     	statusLabel.setText("");
@@ -42,9 +46,18 @@ public class AddAccountController extends AbstractController implements Initiali
     		if(createAndRegisterEmailAccountService.getValue() != EmailConstants.LOGIN_STATE_SUCCEDED){
     			statusLabel.setText("an error occured...");
     		}else{
-    			//close the window
     			Stage stage = (Stage)addressField.getScene().getWindow();//just getting a reference to the stage
-    			stage.close();
+
+    			if(ViewFactory.mainViewInitialized){
+        			//close the window
+        			stage.close();
+    			} else{
+    				try {
+						stage.setScene(ViewFactory.defaultFactory.getMainScene());
+					} catch (OperationNotSupportedException e1) {
+						e1.printStackTrace();
+					}
+    			}
     		}
     	});
     }
@@ -56,7 +69,8 @@ public class AddAccountController extends AbstractController implements Initiali
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		
+    	addressField.setText("barosanuemailtest@gmail.com");
+    	passwordField.setText("9tonfr9lkb97A");
 		
 	}
 

@@ -8,6 +8,7 @@ import com.barosanu.controller.ComposeEmailController;
 import com.barosanu.controller.EmailDetailsController;
 import com.barosanu.controller.MainController;
 import com.barosanu.controller.ModelAccess;
+import com.barosanu.controller.persistence.PersistenceAcess;
 import com.barosanu.model.EmailMessageBean;
 
 import javafx.fxml.FXMLLoader;
@@ -21,7 +22,7 @@ public class ViewFactory {
 
 	public static ViewFactory defaultFactory = new ViewFactory();
 	
-	private static boolean mainViewInitialized = false;
+	public static boolean mainViewInitialized = false;
 
 	private final String DEFAULT_CSS = "style.css";
 	private final String EMAIL_DETAILS_FXML = "EmailDetailsLayout.fxml";
@@ -30,6 +31,7 @@ public class ViewFactory {
 	private final String ADD_ACCOUNT_EMAIL_FXML = "AddAccountLayout.fxml";
 
 	private ModelAccess modelAccess = new ModelAccess();
+	private PersistenceAcess persistenceAcess = new PersistenceAcess(modelAccess);
 
 	public Scene getMainScene() throws OperationNotSupportedException {
 		if (!mainViewInitialized) {
@@ -113,6 +115,10 @@ public class ViewFactory {
 		scene = new Scene(parent);
 		scene.getStylesheets().add(getClass().getResource(DEFAULT_CSS).toExternalForm());
 		return scene;
+	}
+
+	public PersistenceAcess getPersistenceAcess() {
+		return persistenceAcess;
 	}
 
 }

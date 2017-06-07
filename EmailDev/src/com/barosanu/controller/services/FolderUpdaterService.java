@@ -23,11 +23,13 @@ public class FolderUpdaterService extends Service<Void>{
 			protected Void call() throws Exception {
 					for(;;){
 						try {
-							Thread.sleep(10000);
+							Thread.sleep(2000);
 							if(modelAccess != null && FetchFoldersService.noServicesActive()){
+								System.out.println("Checking for folders!!");
 								for(Folder folder: modelAccess.getFolderList()){
 										if (folder.getType() != Folder.HOLDS_FOLDERS  && folder.isOpen()) {
 											folder.getMessageCount();
+
 										}
 								}
 							}

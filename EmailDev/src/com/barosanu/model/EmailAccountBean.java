@@ -22,6 +22,9 @@ public class EmailAccountBean {
 	public String getEmailAdress() {
 		return emailAdress;
 	}
+	public String getPassword(){
+		return password;
+	}
 	public Properties getProperties(){
 		return properties;
 	}

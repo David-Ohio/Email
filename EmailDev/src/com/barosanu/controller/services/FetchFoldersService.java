@@ -87,6 +87,7 @@ public class FetchFoldersService extends Service<Void>{
 	}
 	
 	public static boolean noServicesActive(){
+		System.out.println("number of services active: " + NUMBER_OF_FETCHFOLDERSERVICES_ACTIVE);
 		return NUMBER_OF_FETCHFOLDERSERVICES_ACTIVE==0;
 	}
 

@@ -121,23 +121,23 @@ public class MainController extends AbstractController implements Initializable{
 		emailFoldersTreeView.setRoot(getModelAccess().getRoot());		
 		emailFoldersTreeView.setShowRoot(false);
 		
-		CreateAndRegisterEmailAccountService createAndRegisterEmailAccountService1 = 
-				new CreateAndRegisterEmailAccountService(DONOTCOMMIT.address1, 
-				DONOTCOMMIT.password1,
-				getModelAccess());
-		createAndRegisterEmailAccountService1.restart();
-
-		CreateAndRegisterEmailAccountService createAndRegisterEmailAccountService2 = 
-				new CreateAndRegisterEmailAccountService(DONOTCOMMIT.address2, 
-				DONOTCOMMIT.password2,
-				getModelAccess());
-		createAndRegisterEmailAccountService2.restart();
-		
-		CreateAndRegisterEmailAccountService createAndRegisterEmailAccountService3 = 
-				new CreateAndRegisterEmailAccountService(DONOTCOMMIT.address3, 
-				DONOTCOMMIT.password3,
-				getModelAccess());
-		createAndRegisterEmailAccountService3.restart();
+//		CreateAndRegisterEmailAccountService createAndRegisterEmailAccountService1 = 
+//				new CreateAndRegisterEmailAccountService(DONOTCOMMIT.address1, 
+//				DONOTCOMMIT.password1,
+//				getModelAccess());
+//		createAndRegisterEmailAccountService1.restart();
+//
+//		CreateAndRegisterEmailAccountService createAndRegisterEmailAccountService2 = 
+//				new CreateAndRegisterEmailAccountService(DONOTCOMMIT.address2, 
+//				DONOTCOMMIT.password2,
+//				getModelAccess());
+//		createAndRegisterEmailAccountService2.restart();
+//		
+//		CreateAndRegisterEmailAccountService createAndRegisterEmailAccountService3 = 
+//				new CreateAndRegisterEmailAccountService(DONOTCOMMIT.address3, 
+//				DONOTCOMMIT.password3,
+//				getModelAccess());
+//		createAndRegisterEmailAccountService3.restart();
 		
 		emailTableView.setContextMenu(new ContextMenu(showDetails, markUnread, deleteMessage, reply));
 		

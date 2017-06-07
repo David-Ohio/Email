@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.mail.Folder;
 
+import com.barosanu.controller.persistence.ValidAccount;
 import com.barosanu.model.EmailAccountBean;
 import com.barosanu.model.EmailMessageBean;
 import com.barosanu.model.folder.EmailFolderBean;
@@ -19,7 +20,7 @@ public class ModelAccess {
 
 	private Map<String, EmailAccountBean> emailAccounts = new HashMap<String, EmailAccountBean>();
 	private ObservableList<String> emailAccountsNames = FXCollections.observableArrayList();
-	
+	private List<ValidAccount> validAccountList = new ArrayList<ValidAccount>();
 	private EmailFolderBean<String> root = new EmailFolderBean<String>("", new ImageView());
 
 	public ObservableList<String> getEmailAccountNames() {
@@ -33,6 +34,7 @@ public class ModelAccess {
 	public void addAccount(EmailAccountBean account) {
 		emailAccounts.put(account.getEmailAdress(), account);
 		emailAccountsNames.add(account.getEmailAdress());
+		validAccountList.add(new ValidAccount(account.getEmailAdress(), account.getPassword()));
 	}
 
 	private EmailMessageBean selectedMessage;
@@ -67,6 +69,10 @@ public class ModelAccess {
 
 	public EmailFolderBean<String> getRoot() {
 		return root;
+	}
+	
+	public List<ValidAccount> getValidAccountList(){
+		return validAccountList;
 	}
 
 

@@ -16,12 +16,20 @@ public class App extends Application{
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		
-		ViewFactory viewFactory = ViewFactory.defaultFactory;
-		
-		Scene scene = viewFactory.getMainScene();
+		Scene scene;
+		if(ViewFactory.defaultFactory.getPersistenceAcess().validPersistencefound()){
+			scene = ViewFactory.defaultFactory.getMainScene();
+		} else{
+			scene = ViewFactory.defaultFactory.getAddAccountScene();
+		}
 		primaryStage.setScene(scene);
 		primaryStage.show();				
 		
+	}
+	
+	@Override
+	public void stop(){
+		ViewFactory.defaultFactory.getPersistenceAcess().SavePersistence();
 	}
 
 }
