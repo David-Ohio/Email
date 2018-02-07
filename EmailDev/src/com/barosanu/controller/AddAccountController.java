@@ -69,8 +69,6 @@ public class AddAccountController extends AbstractController implements Initiali
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-    	addressField.setText("barosanuemailtest@gmail.com");
-    	passwordField.setText("9tonfr9lkb97A");
 		
 	}
 
